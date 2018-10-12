@@ -5,6 +5,9 @@ const sequelize = new Sequelize(env.database,env.username,env.password,{
     host:env.host ,
     dialect:env.dialect,
     operatorAliases:false,
+    define:{
+        timestamps: false
+      },
     pool:{
         max:env.pool.max,
         min:env.pool.min,

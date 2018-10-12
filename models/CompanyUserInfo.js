@@ -4,26 +4,23 @@ module.exports =(sequelize,Datatypes)=>{
            type :Datatypes.STRING,
             allowNull: false
         },
-        firstname :{
+        username :{
             type :Datatypes.STRING,
              allowNull: false
          },
-         lastname :{
-            type :Datatypes.STRING,
-             //allowNull: false
-         },
-        mobilenumber:{
+        phonenumber:{
             type:Datatypes.BIGINT,
             allowNull: false   
         },
         email:{
             type:Datatypes.STRING
         },
-        Address:{
+        address:{
             type:Datatypes.TEXT
         },
-        TIN:{
-            type:Datatypes.INTEGER
+        tin:{
+            type:Datatypes.STRING,
+            allowNull: true
         },
         password:{
             type:Datatypes.STRING

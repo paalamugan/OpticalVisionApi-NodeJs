@@ -1,16 +1,34 @@
 const express = require('express')
-
+const logger = require('morgan');
+const bodyPraser = require('body-parser');
+const cors = require('cors');
 
 
 const app = express();
-const bodyParser = require('body-parser');
+
 //const replaceall = require('replaceall');
-const db  = require('./db');
+const {db}  = require('./db');
 
 //routes
 //const customer = req
+//middleware
+app.use(function(req,res,next){
 
+  res.header('Access-Control-Allow-Origin',"*");
+  res.header('Access-Control-Allow-Headers','Origin,X-Requested-With,Content-Type, Accept, Authorization');
+  if(req.method === 'OPTIONS'){
+  res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
+  return res.status(200).json({});
+  }
+  
+  next();
+  });
+app.use(logger('dev'));
+app.use(bodyPraser.urlencoded({extended:false}));
+app.use(bodyPraser.json());
+app.use(cors({ origin: 'http://localhost:4200' }));
 //routes
+
 const companyinfo = require("./routes/companyinforoute");
 const employeeinfo = require("./routes/companyemproute");
 const productList = require("./routes/productlistroute");
@@ -19,7 +37,7 @@ const frameMaterial =  require("./routes/framematerialroute");
 const salesOrder     = require("./routes/salesorderroute");
 const customer   = require("./routes/customerroute"); 
 
-app.use(bodyParser.json());
+
 app.use("/api/visionapp/company/register",companyinfo);
 app.use("/api/visionapp/company",companyinfo);
 app.use("/api/visionapp/company/update/",companyinfo);
@@ -114,10 +132,27 @@ app.use('/api/eyepower/register', eyepowerroute);
 app.use('/api/get/eyepowers', eyepowerroute);
 */
 
+//middleware
 
-const port = 9000;
-app.listen(port,()=>{
-        console.log('Server running in port number 9000')
-});
+       
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+        next(createError(404));
+      });
+      app.use('*',(res,req,next)=>{
+        res.send('this is my default router');
+      })
+      // error handler
+      app.use(function(err, req, res, next) {
+        // set locals, only providing error in development
+        res.locals.message = err.message;
+        res.locals.error = req.app.get('env') === 'development' ? err : {};
+      
+        // render the error page
+        res.status(err.status || 500);
+        res.send(err.status);
+      });
+      
+      module.exports = app;
 
 

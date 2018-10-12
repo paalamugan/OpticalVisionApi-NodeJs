@@ -4,30 +4,29 @@ const SignInInfo = db.signInInfo;
 
 exports.registerCompany = async(req,res,next)=>{
    // console.log("company name ::"+req.body.companyname)
-    const companyExists = CompanyUser.findOne({
-        where :{companyname : req.body.companyname}
+    await CompanyUser.findOne({
+        where :{companyname : req.body.companyName}
     }).then(companychk=>{
         if(companychk !=null){
-            res.send("Already company name "+req.body.companyname+ "is registered. Please signup with new");
+           return res.status(201).json({message:'Already CompanyName Register'});
         }else{
            CompanyUser.create({
-                companyname : req.body.companyname,
-                firstname : req.body.firstname,
-                lastname : req.body.lastname,
-                mobilenumber : req.body.mobilenumber,
+                companyname : req.body.companyName,
+                username : req.body.userName,
+                phonenumber : req.body.phoneNumber,
                 email : req.body.email,
-                Address:req.body.Address,
-                TIN:req.body.TIN,
+                address:req.body.address,
+                tin:req.body.tinNumber,
                 password:req.body.password
             }).then(registeredcompany=>{
                 SignInInfo.create({
                     companyuserinfoId:registeredcompany.id,
                     username:registeredcompany.email,
                     password:registeredcompany.password
-                }).then(()=>{
-                    res.send("Register your company.Login with "+registeredcompany.email +"and password");
+                }).then((signinfo)=>{
+                    return res.status(200).send(signinfo);
                 })
-                console.log("newcompany id ::"+registeredcompany.id);
+                
             })
             
            
