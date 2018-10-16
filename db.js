@@ -1,13 +1,14 @@
 const db = require('./config/dbconfig');
 
 const Customer = db.customerdetails;
-
+const CompanyUser = db.companyuserinfo;
 const EyePower = db.eyedetails;
 
 const invoiceOrder = db.invoiceorder;
 
 
 db.sequelize.sync({force:false}).then(()=>{
+    
    /* Customer.findAndCountAll({}).then(result=>{
         console.log("result value:"+result.count);
         if(result.count == 0){

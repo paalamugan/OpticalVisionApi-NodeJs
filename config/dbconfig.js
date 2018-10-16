@@ -46,18 +46,18 @@ db.proditem              = require('../models/ProductItem')(sequelize,Sequelize)
 db.invoiceDetail         = require('../models/InvoiceDetail')(sequelize,Sequelize);
 
 /* Association */
-db.signInInfo.belongsTo(db.companyuserinfo);
-db.employeeSingnInInfo.belongsTo(db.companyuserinfo);
-db.companyEmpInfo.belongsTo(db.companyuserinfo);
-db.productlist.belongsTo(db.companyuserinfo);
-db.frametype.belongsTo(db.companyuserinfo);
-db.framematerial.belongsTo(db.companyuserinfo);
-db.boxmodel.belongsTo(db.companyuserinfo);
-db.customer.belongsTo(db.companyuserinfo);
-db.eyeprescriptions.belongsTo(db.companyuserinfo);
-db.salesorder.belongsTo(db.companyuserinfo);
-db.proditem.belongsTo(db.companyuserinfo);
-db.invoiceDetail.belongsTo(db.companyuserinfo);
+db.signInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.employeeSingnInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.companyEmpInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.productlist.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.frametype.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.framematerial.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.boxmodel.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.customer.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.eyeprescriptions.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.salesorder.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.proditem.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.invoiceDetail.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 
 db.employeeSingnInInfo.belongsTo(db.companyEmpInfo,{foreignKey:"employeeId"});
 

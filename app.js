@@ -12,6 +12,12 @@ const {db}  = require('./db');
 //routes
 //const customer = req
 //middleware
+
+app.use(logger('dev'));
+app.use(express.static('./uploads'));
+app.use(bodyPraser.urlencoded({extended:false}));
+app.use(bodyPraser.json());
+app.use(cors({ origin: 'http://localhost:4200' }));
 app.use(function(req,res,next){
 
   res.header('Access-Control-Allow-Origin',"*");
@@ -23,10 +29,6 @@ app.use(function(req,res,next){
   
   next();
   });
-app.use(logger('dev'));
-app.use(bodyPraser.urlencoded({extended:false}));
-app.use(bodyPraser.json());
-app.use(cors({ origin: 'http://localhost:4200' }));
 //routes
 
 const companyinfo = require("./routes/companyinforoute");
@@ -37,11 +39,17 @@ const frameMaterial =  require("./routes/framematerialroute");
 const salesOrder     = require("./routes/salesorderroute");
 const customer   = require("./routes/customerroute"); 
 
-
+//Signup
 app.use("/api/visionapp/company/register",companyinfo);
 app.use("/api/visionapp/company",companyinfo);
 app.use("/api/visionapp/company/update/",companyinfo);
 
+//Login
+app.use("/api/visionapp/company",companyinfo);
+app.use("/api/visionapp/company",companyinfo);
+app.use("/api/visionapp/company",companyinfo);
+
+//Employee
 app.use("/api/visionapp/new/employee",employeeinfo);
 app.use("/api/visionapp/update/employee",employeeinfo);
 app.use("/api/visionapp/delete/employee",employeeinfo);

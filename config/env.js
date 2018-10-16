@@ -9,7 +9,8 @@ const env={
         min:0,
         idle:10000,
         acquire:30000
-    }
+    },
+    JWT_KEY:"secret"
 
 };
 

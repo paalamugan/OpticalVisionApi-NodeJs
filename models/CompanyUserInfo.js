@@ -1,5 +1,14 @@
 module.exports =(sequelize,Datatypes)=>{
     const CompanyInfo = sequelize.define('companyuserinfo',{
+        uuid: {
+            type: Datatypes.UUID,
+            defaultValue: Datatypes.UUIDV1,
+            primaryKey: true
+          },
+          customid:{
+            type :Datatypes.INTEGER,
+           //autoIncrement: true,
+          },
         companyname :{
            type :Datatypes.STRING,
             allowNull: false
@@ -23,6 +32,9 @@ module.exports =(sequelize,Datatypes)=>{
             allowNull: true
         },
         password:{
+            type:Datatypes.STRING
+        },
+        userImage:{
             type:Datatypes.STRING
         }
       

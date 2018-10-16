@@ -1,31 +1,27 @@
 module.exports =(sequelize,Datatypes)=>{
     const CompanyEmpInfo = sequelize.define('companyempinfo',{
-        firstname:{
-            type:Datatypes.STRING,
-            allowNull:false
-        },
-        lastname:{
-            type:Datatypes.STRING,
-           // allowNull:false
-        },
         employeeId:{
             type:Datatypes.STRING,
             primaryKey:true,
            // autoIncrement: true,
             allowNull:false
         },
-        empname:{
+       
+        employeeName:{
             type:Datatypes.STRING,
             allowNull:false
         },
-        mobilenumber:{
+        mobileNumber:{
             type:Datatypes.BIGINT,
             allowNull: false   
         },
-        email:{
+        employeeEmail:{
             type:Datatypes.STRING
         },
-        Address:{
+        employeePassword:{
+            type:Datatypes.STRING
+        },
+        address:{
             type:Datatypes.TEXT
         },
         DOB:{
@@ -36,7 +32,7 @@ module.exports =(sequelize,Datatypes)=>{
             type:Datatypes.DATE,
             allowNull:false
         },
-        adminacces:{
+        adminAccess:{
             type:Datatypes.ENUM,
             values:['yes','no']
         }
