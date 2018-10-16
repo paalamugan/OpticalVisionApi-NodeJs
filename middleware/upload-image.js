@@ -3,7 +3,7 @@ const path = require('path');
 //set Storage engine
 var storage=multer.diskStorage({
     destination:function(req,file,cb){
-        cb(null,'./uploads/');
+        cb(null,'./uploads');
     },
     filename:function(req,file,cb){
         // cb(null,file.fieldname+'-'+Date.now()+
@@ -40,7 +40,6 @@ module.exports = (req,res,next)=>{
         return res.status(401).send('Error:Images Only!');
         }else{
             if(req.file == undefined){
-                req.file.path='';
                 next();
                 //return res.status(401).send({msg:'No File Selected!'});
             }

@@ -2,8 +2,8 @@ const express = require('express')
 const logger = require('morgan');
 const bodyPraser = require('body-parser');
 const cors = require('cors');
-
-
+var path = require('path');
+var session=require('express-session');
 const app = express();
 
 //const replaceall = require('replaceall');
@@ -14,10 +14,12 @@ const {db}  = require('./db');
 //middleware
 
 app.use(logger('dev'));
-app.use(express.static('./uploads'));
+app.use(express.static('./'));
 app.use(bodyPraser.urlencoded({extended:false}));
 app.use(bodyPraser.json());
-app.use(cors({ origin: 'http://localhost:4200' }));
+//app.use(express.static(path.join(__dirname, 'dist/OpticalVision')));
+//app.use('/', express.static(path.join(__dirname, 'dist/OpticalVision')));
+app.use(cors({ origin: ['http://localhost:4200'],credentials:true }));
 app.use(function(req,res,next){
 
   res.header('Access-Control-Allow-Origin',"*");
@@ -29,6 +31,11 @@ app.use(function(req,res,next){
   
   next();
   });
+ app.use(session({
+   secret:"Shh, its a secret!",
+   resave:false,
+   saveUninitialized:true
+ }))
 //routes
 
 const companyinfo = require("./routes/companyinforoute");
@@ -159,6 +166,8 @@ app.use(function(req, res, next) {
         // render the error page
         res.status(err.status || 500);
         res.send(err.status);
+      
+      
       });
       
       module.exports = app;

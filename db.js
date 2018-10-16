@@ -5,8 +5,8 @@ const CompanyUser = db.companyuserinfo;
 const EyePower = db.eyedetails;
 
 const invoiceOrder = db.invoiceorder;
-
-
+const Sequelize = require('sequelize');
+const Op=Sequelize.Op;
 db.sequelize.sync({force:false}).then(()=>{
     
    /* Customer.findAndCountAll({}).then(result=>{

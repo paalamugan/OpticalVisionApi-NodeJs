@@ -1,26 +1,20 @@
 const db=require('../config/dbconfig');
+const Sequelize = require('sequelize');
+const Op=Sequelize.Op;
 const CompanyUser = db.companyuserinfo;
 const SignInInfo = db.signInInfo;
+
 const bcrypt= require('bcrypt');
 const env = require('../config/env.js');
 const jwt = require('jsonwebtoken');
-const Op = db.Op
+const session=require('express-session');
 // const multer = require('multer');
 // const upload = multer({dest:'uploads/'}).single('photo');
 exports.registerCompany = async(req,res,next)=>{
       
     await CompanyUser.findOne({
-        where :{
-            [Op.or]: [{companyname: req.body.companyName}, {email: req.body.email}]
-            // companyname : req.body.companyName,
-            // $or:{
-            // email:{
-            //    $eq:req.body.email}
-            // }
-            // }
-        }
-    }).then(companychk=>{
-        console.log(companychk);
+       where:{[Op.or]:[{email:req.body.email},{companyname:req.body.companyName}]}
+      }).then(companychk=>{
         if(companychk !=null){
            return res.status(401).send(' Already Company Name and Email Registered');
         }
@@ -30,30 +24,57 @@ exports.registerCompany = async(req,res,next)=>{
             if(err){
                 return res.status(401).send('Invalid data');
             }else{
-                CompanyUser.count().then((count)=>{
+                if(req.file==undefined){
+                    CompanyUser.count().then((count)=>{
                 
-                count=count+1;
-               CompanyUser.create({
-                customid:count,
-                companyname : req.body.companyName,
-                username : req.body.userName,
-                phonenumber : req.body.phoneNumber,
-                email : req.body.email,
-                address:req.body.address,
-                tin:req.body.tinNumber,
-                password:hash,
-                file:req.file.path
-            }).then(registeredcompany=>{
-                SignInInfo.create({
-                    fk_companyid:registeredcompany.uuid,
-                    username:registeredcompany.email,
-                    password:registeredcompany.password
-                }).then((signinfo)=>{
-                    return res.status(200).send(signinfo);
-                })
+                        count=count+1;
+                       CompanyUser.create({
+                        customid:count,
+                        companyname : req.body.companyName,
+                        username : req.body.userName,
+                        phonenumber : req.body.phoneNumber,
+                        email : req.body.email,
+                        address:req.body.address,
+                        tin:req.body.tinNumber,
+                        password:hash,
+                    }).then(registeredcompany=>{
+                        SignInInfo.create({
+                            fk_companyid:registeredcompany.uuid,
+                            username:registeredcompany.email,
+                            password:registeredcompany.password
+                        }).then((signinfo)=>{
+                            return res.status(200).send(signinfo);
+                        })
+                        
+                    })
+                });
+                }else{
+                    CompanyUser.count().then((count)=>{
                 
-            })
-        });
+                        count=count+1;
+                       CompanyUser.create({
+                        customid:count,
+                        companyname : req.body.companyName,
+                        username : req.body.userName,
+                        phonenumber : req.body.phoneNumber,
+                        email : req.body.email,
+                        address:req.body.address,
+                        tin:req.body.tinNumber,
+                        password:hash,
+                        userImage:req.file.path
+                    }).then(registeredcompany=>{
+                        SignInInfo.create({
+                            fk_companyid:registeredcompany.uuid,
+                            username:registeredcompany.email,
+                            password:registeredcompany.password
+                        }).then((signinfo)=>{
+                            return res.status(200).send(signinfo);
+                        })
+                        
+                    })
+                });
+                }
+                
         }});
             
            
@@ -79,9 +100,10 @@ exports.Adminlogin = async(req,res,next)=>{
                     const adminvalue="admin";
                     const token =jwt.sign({
                         username:admin.username,
+                        userImage:admin.userImage,
                         companyname:admin.companyname,
                         companyid:admin.id,
-                        admin:adminvalue,
+                        Identifier:adminvalue,
                         company:admin
                      },
                      env.JWT_KEY,
@@ -89,6 +111,7 @@ exports.Adminlogin = async(req,res,next)=>{
                          expiresIn:"1d"
                      }
                      );
+                     req.session.user=token;
                      return res.status(200).json({
                          token:token
                      });
