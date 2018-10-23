@@ -3,7 +3,7 @@ module.exports = (req,res,next)=>{
         next();
     }else{
         res.status(403).send({
-            errorMessage:'You need a payload'
+            error:'You need a payload'
         })
     }
       

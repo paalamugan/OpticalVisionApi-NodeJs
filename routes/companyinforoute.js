@@ -5,17 +5,15 @@ const db = require('../config/dbconfig');
 //const CompanyUser =  db.companyuserinfo;
 const CheckAuth=require('../middleware/check-auth');
 const ValidatePayload=require('../middleware/validatepayload');
-const UploadImage=require('../middleware/upload-image');
+const UploadImageAdmin=require('../middleware/upload-image-Admin');
 // const multer = require('multer');
 // const upload = multer({dest:'uploads/'});
 router.route("/")
-.post((UploadImage),CompanyController.registerCompany)
+.post((UploadImageAdmin),CompanyController.registerCompany)
 router.route("/adminlogin")
 .post((ValidatePayload),CompanyController.Adminlogin)
 router.route("/username")
 .get((CheckAuth),CompanyController.Username)
-router.route("/employeelogin")
-.post(CompanyController.Employeelogin)
 router.route("/:companyname")
 .get(CompanyController.getDetails)
 .put(CompanyController.updateDetails)

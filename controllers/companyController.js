@@ -7,16 +7,20 @@ const SignInInfo = db.signInInfo;
 const bcrypt= require('bcrypt');
 const env = require('../config/env.js');
 const jwt = require('jsonwebtoken');
-const session=require('express-session');
 // const multer = require('multer');
 // const upload = multer({dest:'uploads/'}).single('photo');
 exports.registerCompany = async(req,res,next)=>{
-      
     await CompanyUser.findOne({
        where:{[Op.or]:[{email:req.body.email},{companyname:req.body.companyName}]}
       }).then(companychk=>{
         if(companychk !=null){
-           return res.status(401).send(' Already Company Name and Email Registered');
+            if(companychk.email==req.body.email){
+                return res.status(401).send(' Already Email  Registered');
+            }
+            else if(companychk. companyname==req.body.companyName){
+                return res.status(401).send(' Already Company Name Registered');
+            }
+          
         }
        
         else{
@@ -24,7 +28,6 @@ exports.registerCompany = async(req,res,next)=>{
             if(err){
                 return res.status(401).send('Invalid data');
             }else{
-                if(req.file==undefined){
                     CompanyUser.count().then((count)=>{
                 
                         count=count+1;
@@ -37,6 +40,7 @@ exports.registerCompany = async(req,res,next)=>{
                         address:req.body.address,
                         tin:req.body.tinNumber,
                         password:hash,
+                        userImage: req.body.userImage
                     }).then(registeredcompany=>{
                         SignInInfo.create({
                             fk_companyid:registeredcompany.uuid,
@@ -48,32 +52,7 @@ exports.registerCompany = async(req,res,next)=>{
                         
                     })
                 });
-                }else{
-                    CompanyUser.count().then((count)=>{
                 
-                        count=count+1;
-                       CompanyUser.create({
-                        customid:count,
-                        companyname : req.body.companyName,
-                        username : req.body.userName,
-                        phonenumber : req.body.phoneNumber,
-                        email : req.body.email,
-                        address:req.body.address,
-                        tin:req.body.tinNumber,
-                        password:hash,
-                        userImage:req.file.path
-                    }).then(registeredcompany=>{
-                        SignInInfo.create({
-                            fk_companyid:registeredcompany.uuid,
-                            username:registeredcompany.email,
-                            password:registeredcompany.password
-                        }).then((signinfo)=>{
-                            return res.status(200).send(signinfo);
-                        })
-                        
-                    })
-                });
-                }
                 
         }});
             
@@ -86,7 +65,7 @@ exports.Adminlogin = async(req,res,next)=>{
    await CompanyUser.findOne({
        where:{email :req.body.email}
     }).then(admin=>{
-       
+       console.log(admin)
         if(!admin){
             return res.status(401).send('Email is not Registerd');
         }
@@ -96,13 +75,13 @@ exports.Adminlogin = async(req,res,next)=>{
                 if(!result){
                     return res.status(401).send('Password is Incorrect');
                 }
-                if(result){
+                else{
                     const adminvalue="admin";
                     const token =jwt.sign({
                         username:admin.username,
                         userImage:admin.userImage,
                         companyname:admin.companyname,
-                        companyid:admin.id,
+                        companyId:admin.uuid,
                         Identifier:adminvalue,
                         company:admin
                      },
@@ -111,7 +90,7 @@ exports.Adminlogin = async(req,res,next)=>{
                          expiresIn:"1d"
                      }
                      );
-                     req.session.user=token;
+                    
                      return res.status(200).json({
                          token:token
                      });
@@ -146,20 +125,19 @@ exports.Username= async(req,res,next)=>{
 //     return res.status(200).json(decodedToken);
 }
 
-exports.Employeelogin = async(req,res,next)=>{
-  await  CompanyUser.findOne({
-       where:{companyname :req.params.companyname}
-    }).then(companydetail=>{
-        if(null !=companydetail){
-            res.send(companydetail);
-        }else{
-            res.send("No company register with the name :"+req.params.companyname)
-        }
-        console.log("companydetail"+companydetail);
-    }).catch(err=>{
-        console.log(err);
-    })
-}
+// exports.Employeelogin = async(req,res,next)=>{
+//   await  CompanyUser.findOne({
+//        where:{companyname :req.params.companyname}
+//     }).then(companydetail=>{
+//         if(null !=companydetail){
+//             res.status(200).send(companydetail);
+//         }else{
+//             res.send("No company register with the name :"+req.params.companyname)
+//         }
+//     }).catch(err=>{
+//         console.log(err);
+//     })
+// }
 
 exports.getDetails = async(req,res,next)=>{
     CompanyUser.findOne({

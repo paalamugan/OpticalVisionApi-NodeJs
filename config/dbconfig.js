@@ -59,7 +59,7 @@ db.salesorder.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKe
 db.proditem.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 db.invoiceDetail.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 
-db.employeeSingnInInfo.belongsTo(db.companyEmpInfo,{foreignKey:"employeeId"});
+// db.employeeSingnInInfo.belongsTo(db.companyEmpInfo,{foreignKey:"employeeId"});
 
 db.salesorder.hasMany(db.eyeprescriptions,{as:'SalesOrderID'});
 db.salesorder.belongsTo(db.customer);

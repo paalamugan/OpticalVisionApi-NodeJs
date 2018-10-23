@@ -19,7 +19,7 @@ app.use(bodyPraser.urlencoded({extended:false}));
 app.use(bodyPraser.json());
 //app.use(express.static(path.join(__dirname, 'dist/OpticalVision')));
 //app.use('/', express.static(path.join(__dirname, 'dist/OpticalVision')));
-app.use(cors({ origin: ['http://localhost:4200'],credentials:true }));
+app.use(cors({ origin: 'http://localhost:4200' }));
 app.use(function(req,res,next){
 
   res.header('Access-Control-Allow-Origin',"*");
@@ -57,11 +57,11 @@ app.use("/api/visionapp/company",companyinfo);
 app.use("/api/visionapp/company",companyinfo);
 
 //Employee
-app.use("/api/visionapp/new/employee",employeeinfo);
-app.use("/api/visionapp/update/employee",employeeinfo);
-app.use("/api/visionapp/delete/employee",employeeinfo);
-app.use("/api/visionapp/listall/employee",employeeinfo);
-app.use("/api/visionapp/get/employee",employeeinfo);
+app.use("/api/visionapp/employee/add",employeeinfo);
+app.use("/api/visionapp/employee",employeeinfo);
+app.use("/api/visionapp/employee/update",employeeinfo);
+app.use("/api/visionapp/employee/delete",employeeinfo);
+app.use("/api/visionapp/employee/listall",employeeinfo);
 
 
 //Customer:

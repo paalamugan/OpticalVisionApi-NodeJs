@@ -1,6 +1,6 @@
 module.exports =(sequelize,Datatypes)=>{
     const EmpSignInInfo = sequelize.define('empsignininfo',{
-        username:{
+        email:{
             type:Datatypes.STRING,
             primaryKey: true,
             allowNull:false
@@ -9,9 +9,15 @@ module.exports =(sequelize,Datatypes)=>{
             type:Datatypes.STRING,
             allowNull:false
         },
-        adminacces:{
+        employeeId:{
+            type:Datatypes.STRING,
+           
+           // autoIncrement: true,
+            allowNull:false
+        },
+        adminaccess:{
             type:Datatypes.ENUM,
-            values:['yes','no']
+            values:['Yes','No']
         }
     });
     return EmpSignInInfo;
