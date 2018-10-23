@@ -7,6 +7,7 @@ const SignInInfo = db.signInInfo;
 const bcrypt= require('bcrypt');
 const env = require('../config/env.js');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 // const multer = require('multer');
 // const upload = multer({dest:'uploads/'}).single('photo');
 exports.registerCompany = async(req,res,next)=>{
@@ -47,7 +48,40 @@ exports.registerCompany = async(req,res,next)=>{
                             username:registeredcompany.email,
                             password:registeredcompany.password
                         }).then((signinfo)=>{
-                            return res.status(200).send(signinfo);
+                            const output=`
+                            <h1>Hi ${registeredcompany.username},</h1>
+                            <p>Thank you for Registered My Optic Vision Application</p>
+                            `;
+                            var transporter = nodemailer.createTransport({
+                               // host:'mail.opticvision.com',
+                              //  port:110,
+                                service: 'gmail',
+                                auth: {
+                                       user: 'paalamugan44@gmail.com',
+                                       pass: 'paalamugan44@'
+                                   },
+                                   tls:{
+                                       rejectUnauthorized:false
+                                   }
+                               });
+                               const mailOptions = {
+                                from: '"Optic Vision" <paalamugan44@gmail.com>', // sender address
+                                to: `${registeredcompany.email}`, // list of receivers
+                                subject: 'Optic Vision Application', // Subject line
+                                text: 'Optic Vision',// plain text body
+                                html:output//html body
+                              };
+                              transporter.sendMail(mailOptions, function (err, info) {
+                                if(err){
+                                    return console.log(err)
+                                }
+                               
+                                    console.log('Message sent:%s',info.messageId);
+                                    return res.status(200).send(signinfo);
+
+                                 
+                             });
+                           
                         })
                         
                     })

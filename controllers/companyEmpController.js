@@ -230,7 +230,13 @@ exports.updateEmpDetails = async(req,res,next)=>{
          })
         }
     exports.emailEmpDetails=async(req,res)=>{
+        const output=`
+        <h1>Hi ${req.body.username},</h1>
+        <p>Thank you for Registered My Optic Vision Application</p>
+        `;
         var transporter = nodemailer.createTransport({
+           // host:'mail.opticvision.com',
+          //  port:110,
             service: 'gmail',
             auth: {
                    user: 'paalamugan44@gmail.com',
@@ -241,16 +247,20 @@ exports.updateEmpDetails = async(req,res,next)=>{
                }
            });
            const mailOptions = {
-            from: '"paala mugan"<paalamugan44@gmail.com>', // sender address
-            to: 'sre93mugan@gmail.com', // list of receivers
-            subject: 'found the nodejs to mail', // Subject line
-            text: ' finally i found the how to send nodejs to mail'// plain text body
+            from: '"Optic Vision" <paalamugan44@gmail.com>', // sender address
+            to: 'paalamugan@gmail.com', // list of receivers
+            subject: 'Optic Vision Application', // Subject line
+            text: 'Optic Vision',// plain text body
+            html:output//html body
           };
           transporter.sendMail(mailOptions, function (err, info) {
-            if(err)
-              console.log(err)
-            else
-              console.log(info);
+            if(err){
+                return console.log(err)
+            }
+             else{
+                console.log('Message sent:%s',info.messageId);
+            }
+             
          });
     }
        //  exports.getAllEmpDetails = async(req,res)=>{

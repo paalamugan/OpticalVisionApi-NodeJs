@@ -16,8 +16,8 @@ router.route("/:id")
 .put((UploadImageEmployee),EmployeeController.updateEmpDetails)
 //.delete(EmployeeController.deleteEmpDetails)
 
-// router.route("/")
-// .post(EmployeeController.emailEmpDetails)
+router.route("/email")
+.post(EmployeeController.emailEmpDetails)
 
 
 
