@@ -28,7 +28,7 @@ db.sequelize = sequelize;
 
 //Call Model data
 db.companyuserinfo      =   require('../models/CompanyUserInfo')(sequelize,Sequelize);
-
+db.forgetpassword       = require('../models/ForgetPassword')(sequelize,Sequelize);
 db.signInInfo           = require('../models/SignInInfo')(sequelize,Sequelize);
 db.employeeSingnInInfo  = require('../models/EmpSignInInfo')(sequelize,Sequelize);
 db.companyEmpInfo       = require('../models/CompanyEmpInfo')(sequelize,Sequelize);
@@ -58,7 +58,7 @@ db.eyeprescriptions.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', ta
 db.salesorder.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 db.proditem.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 db.invoiceDetail.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-
+db.forgetpassword.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 // db.employeeSingnInInfo.belongsTo(db.companyEmpInfo,{foreignKey:"employeeId"});
 
 db.salesorder.hasMany(db.eyeprescriptions,{as:'SalesOrderID'});

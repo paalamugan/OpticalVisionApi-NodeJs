@@ -49,7 +49,7 @@ const customer   = require("./routes/customerroute");
 //Signup
 app.use("/api/visionapp/company/register",companyinfo);
 app.use("/api/visionapp/company",companyinfo);
-app.use("/api/visionapp/company/update/",companyinfo);
+app.use("/api/visionapp/company/update",companyinfo);
 
 //Login
 app.use("/api/visionapp/company",companyinfo);

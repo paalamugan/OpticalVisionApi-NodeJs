@@ -39,11 +39,16 @@ module.exports = (req,res,next)=>{
         if(err){
         return res.status(401).send('Error:Images Only!');
         }else{
-            if(req.file == undefined){
-                var Imagepath='/uploads/noavatar.png';
-                console.log(Imagepath);
-                req.body.userImage=Imagepath;
-                next();
+            if(req.file == undefined || req.file == null){
+                if( req.body.userImage==''){
+                    var Imagepath='/uploads/noavatar.png';
+                    console.log(Imagepath);
+                    req.body.userImage=Imagepath;
+                    next();
+                }else{
+                    next();
+                }
+                
                
                 //return res.status(401).send({msg:'No File Selected!'});
             }

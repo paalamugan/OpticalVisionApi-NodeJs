@@ -3,23 +3,22 @@ const Sequelize = require('sequelize');
 const Op=Sequelize.Op;
 const CompanyUser = db.companyuserinfo;
 const SignInInfo = db.signInInfo;
+const ForgetPassword = db.forgetpassword;
 
 const bcrypt= require('bcrypt');
 const env = require('../config/env.js');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-// const multer = require('multer');
-// const upload = multer({dest:'uploads/'}).single('photo');
 exports.registerCompany = async(req,res,next)=>{
     await CompanyUser.findOne({
        where:{[Op.or]:[{email:req.body.email},{companyname:req.body.companyName}]}
       }).then(companychk=>{
         if(companychk !=null){
             if(companychk.email==req.body.email){
-                return res.status(401).send(' Already Email  Registered');
+                return res.status(300).send(' Already Email  Registered');
             }
             else if(companychk. companyname==req.body.companyName){
-                return res.status(401).send(' Already Company Name Registered');
+                return res.status(300).send(' Already Company Name Registered');
             }
           
         }
@@ -99,15 +98,14 @@ exports.Adminlogin = async(req,res,next)=>{
    await CompanyUser.findOne({
        where:{email :req.body.email}
     }).then(admin=>{
-       console.log(admin)
         if(!admin){
-            return res.status(401).send('Email is not Registerd');
+            return res.status(300).send('Email is not Registerd');
         }
         else{
             bcrypt.compare(req.body.password,admin.password,(err,result)=>{
 
                 if(!result){
-                    return res.status(401).send('Password is Incorrect');
+                    return res.status(300).send('Password is Incorrect');
                 }
                 else{
                     const adminvalue="admin";
@@ -158,7 +156,149 @@ exports.Username= async(req,res,next)=>{
  
 //     return res.status(200).json(decodedToken);
 }
+exports.ForgetPassword= async(req,res,next)=>{
+    await CompanyUser.findOne({
+        where:{email :req.body.email}
+     }).then(admin=>{
+         if(!admin){
+    return res.status(300).send('Email is not Registerd');
+        }else{
+             ForgetPassword.findOne({
+                where:{fk_companyid:admin.uuid}
+            }).then(forgetpass=>{
+                if(!forgetpass){
+                    let date=Date.now();
+                    ForgetPassword.create({
+                        tempPassword:date,
+                        fk_companyid:admin.uuid
+                    }).then((temppassword)=>{
+                        const output=`
+                        <h1>Hi ${admin.username},</h1>
+                        <p>Your Temporary Password is:${temppassword.tempPassword}</p>
+                        <a href="http://localhost:4200/forgetpassword/${temppassword.uuid}" target="_blank">Please Click here to verify ur password</a>
+                        `;
+                        var transporter = nodemailer.createTransport({
+                           // host:'mail.opticvision.com',
+                          //  port:110,
+                            service: 'gmail',
+                            auth: {
+                                   user: 'paalamugan44@gmail.com',
+                                   pass: 'paalamugan44@'
+                               },
+                               tls:{
+                                   rejectUnauthorized:false
+                               }
+                           });
+                           const mailOptions = {
+                            from: '"Optic Vision" <paalamugan44@gmail.com>', // sender address
+                            to: `${admin.email}`, // list of receivers
+                            subject: 'Optic Vision-Forget Password', // Subject line
+                            text: 'Optic Vision',// plain text body
+                            html:output//html body
+                          };
+                          transporter.sendMail(mailOptions, function (err, info) {
+                            if(err){
+                                return console.log(err)
+                            }else{
+                                return res.status(200).send(
+                                    {success:true}
+                                );
+                            }
+                           
+                                
+            
+                             
+                         });
+                    })
+                }else{
+                    let date=Date.now();
+                   ForgetPassword.update(
+                        {tempPassword:date},  
+                        {where:{fk_companyid:admin.uuid}}).then(()=>{
+                            ForgetPassword.findOne({where:{fk_companyid:admin.uuid}}).then(temppassword=>{
+                                const output=`
+                                <h1>Hi ${admin.username},</h1>
+                                <p>Your Temporary Password is:${temppassword.tempPassword}</p>
+                                <a href="http://localhost:4200/forgetpassword/${temppassword.uuid}" target="_blank">Please Click here to verify ur password</a>
+                                `;
+                                var transporter = nodemailer.createTransport({
+                                   // host:'mail.opticvision.com',
+                                  //  port:110,
+                                    service: 'gmail',
+                                    auth: {
+                                           user: 'paalamugan44@gmail.com',
+                                           pass: 'paalamugan44@'
+                                       },
+                                       tls:{
+                                           rejectUnauthorized:false
+                                       }
+                                   });
+                                   const mailOptions = {
+                                    from: '"Optic Vision" <paalamugan44@gmail.com>', // sender address
+                                    to: `${admin.email}`, // list of receivers
+                                    subject: 'Optic Vision-Forget Password', // Subject line
+                                    text: 'Optic Vision',// plain text body
+                                    html:output//html body
+                                  };
+                                  transporter.sendMail(mailOptions, function (err, info) {
+                                    if(err){
+                                        return console.log(err)
+                                    }else{
+                                        return res.status(200).send(
+                                            {success:true}
+                                        );
+                                    }
+                                   
+                                        
+                    
+                                     
+                                 });
+                            })
+                         
+                      
+                    })
+                }
+            })
+           
+           
+             }
+     })
+}
+exports.GetForgetPassword=async (req,res,next)=>{
+await ForgetPassword.findById(req.params.id).then((data)=>{
+    if(!data){
+        return res.status(300).send("No Record Found");
+    }else{
+        return res.status(200).send(data);
+    }
 
+})
+}
+exports.UpdateForgetPassword=async(req,res,next)=>{
+    await CompanyUser.findById(req.params.id).then(company=>{
+        if(!company){
+            return res.status(401).send("UnKnown Request");
+        }else{
+            bcrypt.hash(req.body.newPassword,10,(err,hash)=>{
+                if(err){
+                    return res.status(300).send("Not Valid data");
+                }else{ 
+                CompanyUser.update(
+                    {password:hash},
+                    {where:{uuid:req.params.id}}
+                ).then(()=>{
+                        ForgetPassword.destroy({
+                            where:{uuid:req.body.uuid}
+                        }).then(()=>{
+                            return res.json({success:true});
+                        })
+                })
+            }
+            });
+        }
+       
+    })
+}
 // exports.Employeelogin = async(req,res,next)=>{
 //   await  CompanyUser.findOne({
 //        where:{companyname :req.params.companyname}
@@ -177,38 +317,69 @@ exports.getDetails = async(req,res,next)=>{
     CompanyUser.findOne({
        where:{companyname :req.params.companyname}
     }).then(companydetail=>{
-        if(null !=companydetail){
-            res.send(companydetail);
+        if(companydetail != null){
+            res.status(200).send(companydetail);
         }else{
-            res.send("No company register with the name :"+req.params.companyname)
+            res.status(300).send("No company register with the name :"+req.params.companyname)
         }
-        console.log("companydetail"+companydetail);
     }).catch(err=>{
         console.log(err);
     })
 }
 exports.updateDetails = async(req,res,next)=>{
-    CompanyUser.findOne({
-        where:{companyname :req.params.companyname}
+  await CompanyUser.findOne({
+        where:{uuid :req.params.companyId}
      }).then(companydetail=>{
          if(companydetail !=null){
-        CompanyUser.update({
-            where:{companyname :req.params.companyname},
-            firstname : req.body.firstname,
-            lastname : req.body.lastname,
-            mobilenumber : req.body.mobilenumber,
-            email : req.body.email,
-            Address:req.body.Address,
-            TIN:req.body.TIN,
-            password:req.body.password
-        },
-        {
-            where:{companyname:req.params.companyname}
-        }).then(()=>{
-            res.send("Details has been updated sucesafully ::"+req.params.companyname);
-        })
+             if(companydetail.password == req.body.password){
+                CompanyUser.update({
+                    companyname : req.body.companyname,
+                    username : req.body.username,
+                    phonenumber : req.body.phonenumber,
+                    email : req.body.email,
+                    address:req.body.address,
+                    tin:req.body.tin,
+                    password:req.body.password,
+                    userImage: req.body.userImage
+                },
+                {
+                    where:{uuid:req.params.companyId}
+                }).then((company)=>{
+                    res.status(200).send(company);
+                }).catch(err=>{
+                    console.log("Error in Company update ::"+err)
+                })
+             }else{
+                bcrypt.hash(req.body.password,10,(err,hash)=>{
+                    if(err){
+                        return res.status(300).send('Invalid data');
+                    }else{
+
+                        CompanyUser.update({
+                            companyname : req.body.companyname,
+                            username : req.body.username,
+                            phonenumber : req.body.phonenumber,
+                            email : req.body.email,
+                            address:req.body.address,
+                            tin:req.body.tin,
+                            password:hash,
+                            userImage: req.body.userImage
+                        },
+                        {
+                            where:{uuid:req.params.companyId}
+                        }).then((company)=>{
+                            res.status(200).send(company);
+                        }).catch(err=>{
+                            console.log("Error in Company update ::"+err)
+                        })
+                    }
+
+
+                });
+             
+            }
     }else{
-        res.send("No record avaiable for :"+req.params.companyname)
+        res.status(300).send("No record avaiable for :"+req.params.companyname)
     }
      })
 }

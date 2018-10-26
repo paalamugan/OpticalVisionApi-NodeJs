@@ -14,10 +14,14 @@ router.route("/adminlogin")
 .post((ValidatePayload),CompanyController.Adminlogin)
 router.route("/username")
 .get((CheckAuth),CompanyController.Username)
-router.route("/:companyname")
+router.route("/:companyId")
 .get(CompanyController.getDetails)
-.put(CompanyController.updateDetails)
-
+.put((UploadImageAdmin),CompanyController.updateDetails)
+router.route("/forgetpassword")
+.post((ValidatePayload),CompanyController.ForgetPassword)
+router.route("/forgetpassword/:id")
+.get(CompanyController.GetForgetPassword)
+.put(CompanyController.UpdateForgetPassword)
 
 
 // router.get('/username', verifyToken, function(req,res,next){
