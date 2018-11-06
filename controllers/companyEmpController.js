@@ -42,6 +42,10 @@ exports.addNewEmployee = async(req,res,next)=>{
                 if(err){
                     return res.status(300).send('Invalid data');
                 }else{
+                    if(req.file===undefined || req.file===null){
+                        var Imagepath='/uploads/noavatar.png';
+                        req.body.userImage=Imagepath;
+                    }
                     EmpInfo.count({
                         where:{
                             fk_companyid:req.body.uuid

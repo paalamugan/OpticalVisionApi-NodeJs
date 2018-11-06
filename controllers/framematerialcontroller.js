@@ -1,30 +1,34 @@
 const db = require('../config/dbconfig');
 const FrameMaterial = db.framematerial;
 
-exports.addNew = async(req,res) =>{
-    FrameMaterial.findOrCreate({
-            where :{framematerial:req.body.framematerial,
-                    companyuserinfoId:req.body.companyuserinfoId
+exports.addNew = async(req,res,next) =>{
+   await FrameMaterial.findOrCreate({
+            where :{name:req.body.name,
+                    fk_companyid:req.userData.companyId
             },
-            defaults: {price: req.body.price,framematerial:req.body.framematerial}
+            defaults: {name:req.body.name,model:req.body.model,size:req.body.size,quantity:req.body.quantity,retailerPrice: req.body.retailerPrice,wholesalerPrice:req.body.wholesalerPrice,fk_companyid:req.userData.companyId}
         }).spread((material,created) =>{
-            console.log("created value ::"+created);
             if(created){
-                res.send(material);
+                res.status(200).send(material);
             }else{
-                res.send("Already Same Frame Type has created.")
+                res.status(300).send({error:"Already Same Frame Material has created.",data:req.body});
             }
-            console.log(material.get({
-                plain:true
-            }))
+            // console.log(material.get({
+            //     plain:true
+            // }))
+        }).catch((err)=>{
+           return res.status(401).send("UnAuthorized Request");
         });
 }
 
 exports.getAllFrameMaterial = async(req,res) =>{
-    FrameMaterial.findAndCountAll({
-        where :{companyuserinfoId : req.params.companyId}
+    await FrameMaterial.findAndCountAll({
+        where :{fk_companyid : req.userData.companyId}
     }).then(displayAllList=>{
-        res.send(displayAllList);
+        // console.log(displayAllList);
+       return res.status(200).send(displayAllList.rows);
+    }).catch(err=>{
+        return res.status(401).send("UnAuthorized Request");
     });
 }
 
@@ -38,20 +42,25 @@ exports.deleteFrameMaterial = async(req,res)=>{
     })*/
 }
 
-exports.updateFrameMaterial = async(req,res)=>{
+exports.updateFrameMaterial = async(req,res,next)=>{
     const Id = req.params.framematerialId;
-    FrameMaterial.update({
-        framematerial : req.body.framematerial,
-        price : req.body.price
+   await FrameMaterial.update({
+            name: req.body.name,
+            model:  req.body.model,
+            size:  req.body.size,
+            quantity:  req.body.quantity,
+            retailerPrice: req.body.retailerPrice,
+            wholesalerPrice: req.body.wholesalerPrice,
     },{
-        where :{id :Id,companyuserinfoId:req.body.companyuserinfoId}
+        where :{uuid :Id,fk_companyid:req.body.fk_companyid}
     }).then(updatedFrameMat=>{
-        if(updatedFrameMat ==0){
-            res.send("There is no framtype matching with companyid")
-        }else{
-            res.status(200).send("Updated the Product Sucessfully"+Id);
-        }
-        console.log("updateFrame:"+updatedFrameMat)
-        
+        return res.send(updatedFrameMat);
+        // if(updatedFrameMat==0){
+        //     return res.status(300).send("There is no framtype matching with companyid")
+        // }else{
+        //     return res.status(200).send("Updated the Product Sucessfully"+Id);
+        // }
+    }).catch(err=>{
+        return res.status(401).send("UnAuthorized Request");
     })
 }

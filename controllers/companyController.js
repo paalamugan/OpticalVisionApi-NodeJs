@@ -28,6 +28,10 @@ exports.registerCompany = async(req,res,next)=>{
             if(err){
                 return res.status(401).send('Invalid data');
             }else{
+                if(req.file===undefined || req.file===null){
+                    var Imagepath='/uploads/noavatar.png';
+                    req.body.userImage=Imagepath;
+                }
                     CompanyUser.count().then((count)=>{
                 
                         count=count+1;
@@ -314,9 +318,11 @@ exports.UpdateForgetPassword=async(req,res,next)=>{
 // }
 
 exports.getDetails = async(req,res,next)=>{
+    console.log(req.params.id);
     CompanyUser.findOne({
-       where:{companyname :req.params.companyname}
+       where:{uuid :req.params.id}
     }).then(companydetail=>{
+        console.log(companydetail);
         if(companydetail != null){
             res.status(200).send(companydetail);
         }else{

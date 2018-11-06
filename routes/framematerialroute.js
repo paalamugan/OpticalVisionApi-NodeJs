@@ -1,16 +1,17 @@
 const router = require('express-promise-router')();
-
+const CheckAuth=require('../middleware/check-auth');
 const FrameMaterial= require('../controllers/framematerialcontroller');
-//const db = require("../config/dbconfig");
+
 router.route("/")
-    .post(FrameMaterial.addNew)
+    .post((CheckAuth),FrameMaterial.addNew)
+    .get((CheckAuth),FrameMaterial.getAllFrameMaterial)
 
 router.route("/:framematerialId")
-    .put(FrameMaterial.updateFrameMaterial)
-    .delete(FrameMaterial.deleteFrameMaterial)
+    .put((CheckAuth),FrameMaterial.updateFrameMaterial)
+    .delete((CheckAuth),FrameMaterial.deleteFrameMaterial)
     
-router.route("/:companyId")
-    .get(FrameMaterial.getAllFrameMaterial)
+// router.route("/:companyId")
+//     .get(FrameMaterial.getAllFrameMaterial)
 
 
    module.exports = router; 

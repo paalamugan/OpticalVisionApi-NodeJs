@@ -50,11 +50,10 @@ const customer   = require("./routes/customerroute");
 app.use("/api/visionapp/company/register",companyinfo);
 app.use("/api/visionapp/company",companyinfo);
 app.use("/api/visionapp/company/update",companyinfo);
-
-//Login
-app.use("/api/visionapp/company",companyinfo);
-app.use("/api/visionapp/company",companyinfo);
-app.use("/api/visionapp/company",companyinfo);
+//Login/
+// app.use("/api/visionapp/company",companyinfo);
+// app.use("/api/visionapp/company",companyinfo);
+// app.use("/api/visionapp/company",companyinfo);
 
 //Employee
 app.use("/api/visionapp/employee/add",employeeinfo);
@@ -76,17 +75,17 @@ app.use("/api/visionapp/productlist/listall",productList);
 
 //FrameType
 
-app.use("/api/visionapp/frametype/new",frameType);
+app.use("/api/visionapp/frametype/add",frameType);
 app.use("/api/visionapp/frametype/update",frameType);
 app.use("/api/visionapp/frametype/delete",frameType);
-app.use("/api/visionapp/frametype/listall",frameType);
+app.use("/api/visionapp/frametype/get",frameType);
 
 //FrameMaterial
 
-app.use("/api/visionapp/framematerial/new",frameMaterial);
+app.use("/api/visionapp/framematerial/add",frameMaterial);
 app.use("/api/visionapp/framematerial/update",frameMaterial);
 app.use("/api/visionapp/framematerial/delete",frameMaterial);
-app.use("/api/visionapp/framematerial/listall",frameMaterial);
+app.use("/api/visionapp/framematerial/get",frameMaterial);
 
 //Sales Order:
 app.use("/api/visionapp/salesorder/new",salesOrder);
@@ -94,8 +93,11 @@ app.use("/api/visionapp/salesorder/findall",salesOrder);
 //app.use("/api/visionapp/salesorder/findallbyyear",salesOrder);
 //app.use("/api/visionapp/salesorder/findallbymonth",salesOrder);
 
-
-
+//DUmmy Value
+app.post('/api/visionapp/dummy/',(req,res,next)=>{
+return res.send(req.body);
+  
+})
 /*const customerRoute       = require("./routes/customerroute");
 const eyePrecriptionRoute = require("./routes/eyeprecriptionroute");
 const invoiceOrderRoute   = require("./routes/invoiceorderroute");

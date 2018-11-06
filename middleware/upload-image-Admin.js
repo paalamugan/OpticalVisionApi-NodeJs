@@ -37,18 +37,19 @@ if(mimetype && extname){
 module.exports = (req,res,next)=>{
     upload(req,res,(err)=>{
         if(err){
-        return res.status(401).send('Error:Images Only!');
+        return res.status(300).send('Error:Images Only!');
         }else{
             if(req.file == undefined || req.file == null ){
-                if( req.body.userImage==''){
-                    var Imagepath='/uploads/noavatar.png';
-                    console.log(Imagepath);
-                    req.body.userImage=Imagepath;
-                    next();
-                }else{
-                    next();
-                }
-               
+                next();
+                // if( req.body.userImage==''){
+                //     var Imagepath='/uploads/noavatar.png';
+                //     console.log(Imagepath);
+                //     req.body.userImage=Imagepath;
+                //     next();
+                // }else{
+                //     next();
+                // }
+              
                 //return res.status(401).send({msg:'No File Selected!'});
             }
             else{
