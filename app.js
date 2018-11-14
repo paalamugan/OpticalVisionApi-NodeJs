@@ -45,7 +45,8 @@ const frameType   = require("./routes/frametyperoute");
 const frameMaterial =  require("./routes/framematerialroute");
 const salesOrder     = require("./routes/salesorderroute");
 const customer   = require("./routes/customerroute"); 
-
+const brand   = require("./routes/brandroute"); 
+const framemodel   = require("./routes/framemodelroute"); 
 //Signup
 app.use("/api/visionapp/company/register",companyinfo);
 app.use("/api/visionapp/company",companyinfo);
@@ -62,6 +63,18 @@ app.use("/api/visionapp/employee/update",employeeinfo);
 app.use("/api/visionapp/employee/delete",employeeinfo);
 app.use("/api/visionapp/employee/listall",employeeinfo);
 
+//Brand
+app.use("/api/visionapp/brand/add",brand);
+app.use("/api/visionapp/brand/update",brand);
+app.use("/api/visionapp/brand/delete",brand);
+app.use("/api/visionapp/brand/get",brand);
+
+//FrameModel
+app.use("/api/visionapp/framemodel",framemodel);
+app.use("/api/visionapp/framemodel/add",framemodel);
+app.use("/api/visionapp/framemodel/update",framemodel);
+app.use("/api/visionapp/framemodel/delete",framemodel);
+app.use("/api/visionapp/framemodel/get",framemodel);
 
 //Customer:
 app.use("/api/visionapp/customer",customer);

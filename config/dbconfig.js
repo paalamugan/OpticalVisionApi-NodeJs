@@ -27,7 +27,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 //Call Model data
-db.companyuserinfo      =   require('../models/CompanyUserInfo')(sequelize,Sequelize);
+db.companyuserinfo      = require('../models/CompanyUserInfo')(sequelize,Sequelize);
 db.forgetpassword       = require('../models/ForgetPassword')(sequelize,Sequelize);
 db.signInInfo           = require('../models/SignInInfo')(sequelize,Sequelize);
 db.employeeSingnInInfo  = require('../models/EmpSignInInfo')(sequelize,Sequelize);
@@ -37,14 +37,14 @@ db.productlist          = require('../models/ProductList')(sequelize,Sequelize);
 db.frametype            = require('../models/FrameType')(sequelize,Sequelize);
 db.framematerial        = require('../models/FrameMaterial')(sequelize,Sequelize);
 db.boxmodel             = require('../models/BoxModel')(sequelize,Sequelize);
-
 db.customer             = require('../models/Customer')(sequelize,Sequelize);
 db.eyeprescriptions     = require('../models/EyePrescription')(sequelize,Sequelize);
 
 db.salesorder            = require('../models/SalesOrder')(sequelize,Sequelize);
 db.proditem              = require('../models/ProductItem')(sequelize,Sequelize);
 db.invoiceDetail         = require('../models/InvoiceDetail')(sequelize,Sequelize);
-
+db.brand                 = require('../models/brand')(sequelize,Sequelize);
+db.framemodel            = require('../models/FrameModel')(sequelize,Sequelize);
 /* Association */
 db.signInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 db.employeeSingnInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
@@ -59,6 +59,8 @@ db.salesorder.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKe
 db.proditem.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 db.invoiceDetail.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 db.forgetpassword.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.brand.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.framemodel.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 // db.employeeSingnInInfo.belongsTo(db.companyEmpInfo,{foreignKey:"employeeId"});
 
 db.salesorder.hasMany(db.eyeprescriptions,{as:'SalesOrderID'});
@@ -70,6 +72,7 @@ db.proditem.belongsToMany(db.salesorder, { as: 'ProdItem', through: 'SalesOrderL
 db.proditem.belongsTo(db.productlist);
 db.proditem.belongsTo(db.frametype);
 db.proditem.belongsTo(db.framematerial);
+db.framemodel.belongsTo(db.brand);
 /*Note:Need to find solution to store boxmodelid in proditem table */
 db.proditem.belongsTo(db.boxmodel);
 db.proditem.belongsTo(db.eyeprescriptions);
