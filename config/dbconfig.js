@@ -45,6 +45,7 @@ db.proditem              = require('../models/ProductItem')(sequelize,Sequelize)
 db.invoiceDetail         = require('../models/InvoiceDetail')(sequelize,Sequelize);
 db.brand                 = require('../models/brand')(sequelize,Sequelize);
 db.framemodel            = require('../models/FrameModel')(sequelize,Sequelize);
+db.lenstype            = require('../models/LensType')(sequelize,Sequelize);
 /* Association */
 db.signInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 db.employeeSingnInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
@@ -61,6 +62,7 @@ db.invoiceDetail.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targe
 db.forgetpassword.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 db.brand.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
 db.framemodel.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
+db.lenstype.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});  
 // db.employeeSingnInInfo.belongsTo(db.companyEmpInfo,{foreignKey:"employeeId"});
 
 db.salesorder.hasMany(db.eyeprescriptions,{as:'SalesOrderID'});

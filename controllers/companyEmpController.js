@@ -88,7 +88,6 @@ exports.addNewEmployee = async(req,res,next)=>{
     });
 };
 exports.Employeelogin = async(req,res,next)=>{
-    console.log(req.body);
     await  EmpInfo.findOne({
          where:{employeeEmail :req.body.email},
          include: [{
@@ -165,7 +164,7 @@ exports.Employeelogin = async(req,res,next)=>{
           }
          
       }).catch(err=>{
-          console.log(err);
+        return res.status(401).send("UnAuthorized Request");
       })
   }
 exports.getEmpDetails = async(req,res,next)=>{
@@ -178,12 +177,16 @@ exports.getEmpDetails = async(req,res,next)=>{
     }).then(empinfo=>{
         console.log(JSON.stringify(empinfo))
         res.send(empinfo);
-    })
+    }).catch(err=>{
+        return res.status(401).send("UnAuthorized Request");
+      })
 }
 exports.updateEmpDetails = async(req,res,next)=>{
+    console.log(req.body);
     await EmpInfo.findById(req.params.id).then((data)=>{
        let empdetails=JSON.stringify(data);
-       if(empdetails.employeePassword==req.body.employeePassword){
+       console.log(empdetails);
+       if(empdetails.employeePassword===req.body.employeePassword){
          EmpInfo.update({            
                         employeeName : req.body.employeeName,
                          mobileNumber:req.body.mobileNumber,
@@ -200,7 +203,7 @@ exports.updateEmpDetails = async(req,res,next)=>{
                       res.status(200).send(emp);
                            
                     }).catch(err=>{
-                        console.log("Error in employee update ::"+err)
+                        return res.status(401).send("UnAuthorized Request");
                     })
         
        }else{
@@ -212,7 +215,7 @@ exports.updateEmpDetails = async(req,res,next)=>{
                     employeeName : req.body.employeeName,
                      mobileNumber:req.body.mobileNumber,
                     employeeEmail : req.body.employeeEmail,
-                     employeePassword:hash,
+                    employeePassword:hash,
                     address:req.body.address,
                     DOB:req.body.DOB,
                     DOJ:req.body.DOJ,
@@ -224,8 +227,8 @@ exports.updateEmpDetails = async(req,res,next)=>{
                     res.status(200).send(emp);
                        
                 }).catch(err=>{
-                    console.log("Error in employee update ::"+err)
-                })
+                    return res.status(401).send("UnAuthorized Request");
+                  })
             }
         });
            

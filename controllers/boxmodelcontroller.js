@@ -4,28 +4,32 @@ const BoxModel = db.boxmodel;
 exports.addNew = async(req,res) =>{
     BoxModel.findOrCreate({
             where :{name:req.body.name,
-                    companyuserinfoId:req.body.companyuserinfoId
+                box_model:req.body.box_model,
+                fk_companyid:req.userData.companyId
             },
-            defaults: {name: req.body.name,description:req.body.description,
-                         quantity:req.body.quantity,price:req.body.price }
+            defaults: {name: req.body.name,box_model:req.body.box_model,
+                         quantity:req.body.quantity,retailerPrice:req.body.retailerPrice,wholesalerPrice:req.body.retailerPrice,fk_companyid:req.userData.companyId }
         }).spread((box,created) =>{
-            console.log("created value ::"+created);
             if(created){
-                res.send(box);
+                res.status(200).send(box);
             }else{
-                res.send("Already Same Box Model has created.")
+                res.status(300).send({error:"Already Box Name has created.",data:req.body});
             }
-            console.log(box.get({
-                plain:true
-            }))
+            // console.log(box.get({
+            //     plain:true
+            // }))
+        }).catch(err =>{
+            return res.status(401).send("UnAuthorized Request");
         });
 }
 
 exports.getAllBoxModel = async(req,res) =>{
     BoxModel.findAndCountAll({
-        where :{companyuserinfoId : req.params.companyId}
+        where :{fk_companyid : req.userData.companyId}
     }).then(displayAllList=>{
-        res.send(displayAllList);
+        res.status(200).send(displayAllList.rows);
+    }).catch(err=>{
+        return res.status(401).send("UnAuthorized Request");
     });
 }
 
@@ -40,21 +44,23 @@ exports.deleteBoxModel = async(req,res)=>{
 }
 
 exports.updateBoxModel = async(req,res)=>{
-    const Id = req.params.boxmodelId;
+    const Id = req.params.uuid;
     BoxModel.update({
         name : req.body.name,
-        description:req.body.description,
+        box_model:req.body.box_model,
         qunatity:req.body.quantity,
-        price : req.body.price
+        retailerPrice : req.body.retailerPrice,
+        wholesalerPrice : req.body.wholesalerPrice,
     },{
-        where :{id :Id,companyuserinfoId:req.body.companyuserinfoId}
+        where :{uuid :Id,fk_companyid:req.body.fk_companyid}
     }).then(updatedBoxModel=>{
-        if(updatedBoxModel ==0){
-            res.send("There is no framtype matching with companyid")
-        }else{
-            res.status(200).send("Updated the Product Sucessfully"+Id);
-        }
-        console.log("updateFrame:"+updatedBoxModel)
-        
+        return res.send(updatedBoxModel);
+        // if(updatedFrameMat==0){
+        //     return res.status(300).send("There is no framtype matching with companyid")
+        // }else{
+        //     return res.status(200).send("Updated the Product Sucessfully"+Id);
+        // }
+    }).catch(err=>{
+        return res.status(401).send("UnAuthorized Request");
     })
 }

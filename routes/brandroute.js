@@ -4,11 +4,11 @@ const Brand= require('../controllers/brandcontroller');
 
 router.route("/")
     .post((CheckAuth),Brand.addNew)
-    .get((CheckAuth),Brand.getAllFrameMaterial)
+    .get((CheckAuth),Brand.getAllBrand)
 
 router.route("/:uuid")
-    .put((CheckAuth),Brand.updateFrameMaterial)
-    .delete((CheckAuth),Brand.deleteFrameMaterial)
+    .put((CheckAuth),Brand.updateBrand)
+    .delete((CheckAuth),Brand.deleteBrand)
     
 // router.route("/:companyId")
 //     .get(FrameMaterial.getAllFrameMaterial)

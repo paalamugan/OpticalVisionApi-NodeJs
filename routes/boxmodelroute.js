@@ -1,16 +1,16 @@
 const router = require('express-promise-router')();
-
+const CheckAuth=require('../middleware/check-auth');
 const BoxModel= require('../controllers/boxmodelcontroller');
 //const db = require("../config/dbconfig");
 router.route("/")
-    .post(BoxModel.addNew)
+    .post((CheckAuth),BoxModel.addNew)
+    .get((CheckAuth),BoxModel.getAllBoxModel)
 
-router.route("/:boxmodelId")
-    .put(BoxModel.updateBoxModel)
-    .delete(BoxModel.deleteBoxModel)
+router.route("/:uuid")
+    .put((CheckAuth),BoxModel.updateBoxModel)
+    .delete((CheckAuth),BoxModel.deleteBoxModel)
     
-router.route("/:companyId")
-    .get(BoxModel.getAllBoxModel)
+    
 
 
    module.exports = router; 

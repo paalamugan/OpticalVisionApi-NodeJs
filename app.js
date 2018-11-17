@@ -47,21 +47,23 @@ const salesOrder     = require("./routes/salesorderroute");
 const customer   = require("./routes/customerroute"); 
 const brand   = require("./routes/brandroute"); 
 const framemodel   = require("./routes/framemodelroute"); 
+const Lenstype   = require("./routes/lenstyperoute"); 
+const boxes = require('./routes/boxmodelroute');
 //Signup
-app.use("/api/visionapp/company/register",companyinfo);
+// app.use("/api/visionapp/company/register",companyinfo);
 app.use("/api/visionapp/company",companyinfo);
-app.use("/api/visionapp/company/update",companyinfo);
+// app.use("/api/visionapp/company/update",companyinfo);
 //Login/
 // app.use("/api/visionapp/company",companyinfo);
 // app.use("/api/visionapp/company",companyinfo);
 // app.use("/api/visionapp/company",companyinfo);
 
 //Employee
-app.use("/api/visionapp/employee/add",employeeinfo);
 app.use("/api/visionapp/employee",employeeinfo);
-app.use("/api/visionapp/employee/update",employeeinfo);
-app.use("/api/visionapp/employee/delete",employeeinfo);
-app.use("/api/visionapp/employee/listall",employeeinfo);
+// app.use("/api/visionapp/employee/get",employeeinfo);
+// app.use("/api/visionapp/employee/update",employeeinfo);
+// app.use("/api/visionapp/employee/delete",employeeinfo);
+// app.use("/api/visionapp/employee/getone",employeeinfo);
 
 //Brand
 app.use("/api/visionapp/brand/add",brand);
@@ -70,12 +72,26 @@ app.use("/api/visionapp/brand/delete",brand);
 app.use("/api/visionapp/brand/get",brand);
 
 //FrameModel
-app.use("/api/visionapp/framemodel",framemodel);
+app.use("/api/visionapp/framemodel/find",framemodel);
 app.use("/api/visionapp/framemodel/add",framemodel);
 app.use("/api/visionapp/framemodel/update",framemodel);
 app.use("/api/visionapp/framemodel/delete",framemodel);
 app.use("/api/visionapp/framemodel/get",framemodel);
 
+
+//LensType
+app.use("/api/visionapp/lenstype/find",Lenstype);
+app.use("/api/visionapp/lenstype/add",Lenstype);
+app.use("/api/visionapp/lenstype/update",Lenstype);
+app.use("/api/visionapp/lenstype/delete",Lenstype);
+app.use("/api/visionapp/lenstype/get",Lenstype);
+
+//Boxes
+app.use("/api/visionapp/boxes/add",boxes);
+app.use("/api/visionapp/boxes/update",boxes);
+app.use("/api/visionapp/boxes/delete",boxes);
+app.use("/api/visionapp/boxes/get",boxes);
+app.use("/api/visionapp/boxes/getone",boxes);
 //Customer:
 app.use("/api/visionapp/customer",customer);
 app.use("/api/visionapp/customer/find",customer)

@@ -3,15 +3,15 @@ const CheckAuth=require('../middleware/check-auth');
 const FrameModel= require('../controllers/framemodelcontroller');
 
 router.route("/")
-    .get((CheckAuth),FrameModel.getAllFrameMaterial)
+    .get((CheckAuth),FrameModel.getAllFrameModel)
     .post((CheckAuth),FrameModel.addNew)
 
 router.route("/:uuid")
-    .put((CheckAuth),FrameModel.updateFrameMaterial)
-    .delete((CheckAuth),FrameModel.deleteFrameMaterial)
+    .put((CheckAuth),FrameModel.updateFrameModel)
+    .delete((CheckAuth),FrameModel.deleteFrameModel)
 
     
-router.route("/find")
+router.route("/findone")
     .get((CheckAuth),FrameModel.findFrameModel)  
 // router.route("/:companyId")
 //     .get(FrameMaterial.getAllFrameMaterial)

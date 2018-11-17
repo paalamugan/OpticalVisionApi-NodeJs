@@ -1,19 +1,18 @@
 const db = require('../config/dbconfig');
-const FrameModel = db.framemodel;
-const Brand = db.brand;
+const LensType = db.lenstype;
 exports.addNew = async(req,res,next) =>{
-   await FrameModel.findOrCreate({
-            where :{brandUuid:req.body.brand.uuid,
-                    model:req.body.model,
-                    frametype:req.body.frametype,
+   await LensType.findOrCreate({
+            where :{powerlenstype:req.body.powerlenstype,
+                    name:req.body.name,
+                    lensmaterial:req.body.lensmaterial,
                     fk_companyid:req.userData.companyId
             },
-            defaults: {brandUuid:req.body.brand.uuid,model:req.body.model,frametype:req.body.frametype,size:req.body.size,quantity:req.body.quantity,retailerPrice: req.body.retailerPrice,wholesalerPrice:req.body.wholesalerPrice,fk_companyid:req.userData.companyId}
-        }).spread((material,created) =>{
+            defaults: {powerlenstype:req.body.powerlenstype,name:req.body.name,lensmaterial:req.body.lensmaterial,quantity:req.body.quantity,retailerPrice: req.body.retailerPrice,wholesalerPrice:req.body.wholesalerPrice,fk_companyid:req.userData.companyId}
+        }).spread((lenstype,created) =>{
             if(created){
-                res.status(200).send(material);
+                res.status(200).send(lenstype);
             }else{
-                res.status(300).send({error:"Already Same Frame Model has created.",data:req.body});
+                res.status(300).send({error:"Already Same Lens Type has created.",data:req.body});
             }
             // console.log(material.get({
             //     plain:true
@@ -23,12 +22,9 @@ exports.addNew = async(req,res,next) =>{
         });
 }
 
-exports.getAllFrameModel = async(req,res) =>{
-    await FrameModel.findAndCountAll({
+exports.getAllLensType = async(req,res) =>{
+    await LensType.findAndCountAll({
         where :{fk_companyid : req.userData.companyId},
-        include:[{
-            model:Brand
-        }]
     }).then(displayAllList=>{
         // console.log(displayAllList);
        return res.status(200).send(displayAllList.rows);
@@ -37,7 +33,7 @@ exports.getAllFrameModel = async(req,res) =>{
     });
 }
 
-exports.deleteFrameModel = async(req,res)=>{
+exports.deleteLensType = async(req,res)=>{
     const Id = req.params.framematerialId;
     //console.log("Producttype value:"+prodtype)
   /*await ProductType.destroy({
@@ -47,19 +43,19 @@ exports.deleteFrameModel = async(req,res)=>{
     })*/
 }
 
-exports.updateFrameModel = async(req,res,next)=>{
+exports.updateLensType = async(req,res,next)=>{
     const Id = req.params.uuid;
-   await FrameModel.update({
-            brandUuid: req.body.brand.uuid,
-            model:  req.body.model,
-            frametype:req.body.frametype,
+   await LensType.update({
+            powerlenstype: req.body.powerlenstype,
+            name:  req.body.name,
+            lensmaterial:req.body.lensmaterial,
             quantity:  req.body.quantity,
             retailerPrice: req.body.retailerPrice,
             wholesalerPrice: req.body.wholesalerPrice,
     },{
         where :{uuid :Id,fk_companyid:req.body.fk_companyid}
-    }).then(updatedFrameMat=>{
-        return res.send(updatedFrameMat);
+    }).then(updated=>{
+        return res.send(updated);
         // if(updatedFrameMat==0){
         //     return res.status(300).send("There is no framtype matching with companyid")
         // }else{
@@ -70,15 +66,11 @@ exports.updateFrameModel = async(req,res,next)=>{
     })
    
 }
-exports.findFrameModel= async(req,res,next)=>{
-     FrameModel.findOne({
-        where:{model:req.query.model,brandUuid:req.query.brand,fk_companyid:req.userData.companyId},
-        include:[{
-            model:Brand
-        }]
-        // attributes:['model','quantity','frametype','retailerPrice','wholesalerPrice'],
+exports.findLensType= async(req,res,next)=>{
+     LensType.findOne({
+        where:{powerlenstype:req.query.powerlenstype,name:req.query.name,fk_companyid:req.userData.companyId},
     }).then(data=>{
-       res.send(data);
+        res.send(data);
     }).catch(err=>{
         return res.status(401).send("UnAuthorized Request");
     })

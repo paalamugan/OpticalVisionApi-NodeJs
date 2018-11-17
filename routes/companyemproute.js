@@ -4,15 +4,16 @@ const EmployeeController = require('../controllers/companyEmpController');
 //const CompanyUser =  db.companyuserinfo;
 const CheckAuth=require('../middleware/check-auth');
 const UploadImageEmployee=require('../middleware/upload-image-Employee');
-router.route("/")
+router.route("/add")
 .post((CheckAuth),(UploadImageEmployee),EmployeeController.addNewEmployee)
+router.route("/get")
 .get((CheckAuth),EmployeeController.getAllEmpDetails)
 
 router.route("/employeelogin")
 .post(EmployeeController.Employeelogin);
-router.route("/get/:id")
+router.route("/getone/:id")
 .get((CheckAuth),EmployeeController.getEmpDetails)
-router.route("/:id")
+router.route("/update/:id")
 .put((UploadImageEmployee),EmployeeController.updateEmpDetails)
 //.delete(EmployeeController.deleteEmpDetails)
 

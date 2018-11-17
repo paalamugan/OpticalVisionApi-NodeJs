@@ -21,7 +21,7 @@ exports.addNew = async(req,res,next) =>{
         });
 }
 
-exports.getAllFrameMaterial = async(req,res) =>{
+exports.getAllBrand = async(req,res) =>{
     await Brand.findAndCountAll({
         where :{fk_companyid : req.userData.companyId}
     }).then(displayAllList=>{
@@ -32,7 +32,7 @@ exports.getAllFrameMaterial = async(req,res) =>{
     });
 }
 
-exports.deleteFrameMaterial = async(req,res)=>{
+exports.deleteBrand = async(req,res)=>{
     const Id = req.params.framematerialId;
     //console.log("Producttype value:"+prodtype)
   /*await ProductType.destroy({
@@ -42,7 +42,7 @@ exports.deleteFrameMaterial = async(req,res)=>{
     })*/
 }
 
-exports.updateFrameMaterial = async(req,res,next)=>{
+exports.updateBrand= async(req,res,next)=>{
     const Id = req.params.uuid;
    await Brand.update({
             name: req.body.name,

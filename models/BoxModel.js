@@ -1,19 +1,26 @@
 module.exports =(sequelize,Datatypes)=>{
     const BoxModel = sequelize.define('boxmodel',{
+        uuid: {
+            type: Datatypes.UUID,
+            defaultValue: Datatypes.UUIDV1,
+            primaryKey: true
+          },
         name:{
             type:Datatypes.STRING,
             allowNull:false
         },
-        description:{
+        box_model:{
             type:Datatypes.STRING
         },
         quantity:{
-            type:Datatypes.ENUM,
-            values:['dozen','unit']
+            type:Datatypes.INTEGER,
         },
-        price:{
+        retailerPrice:{
             type:Datatypes.INTEGER,
             allowNull:false
+        },
+        wholesalerPrice:{
+            type:Datatypes.INTEGER,
         }
     });
     return BoxModel;

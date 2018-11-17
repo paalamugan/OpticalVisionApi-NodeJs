@@ -8,7 +8,7 @@ const ValidatePayload=require('../middleware/validatepayload');
 const UploadImageAdmin=require('../middleware/upload-image-Admin');
 // const multer = require('multer');
 // const upload = multer({dest:'uploads/'});
-router.route("/")
+router.route("/register")
 .post((UploadImageAdmin),CompanyController.registerCompany)
 router.route("/adminlogin")
 .post((ValidatePayload),CompanyController.Adminlogin)
@@ -16,7 +16,7 @@ router.route("/username")
 .get((CheckAuth),CompanyController.Username)
 router.route("/getone/:id")
 .get(CompanyController.getDetails)
-router.route("/:companyId")
+router.route("/update/:companyId")
 .put((UploadImageAdmin),CompanyController.updateDetails)
 router.route("/forgetpassword")
 .post((ValidatePayload),CompanyController.ForgetPassword)
