@@ -24,6 +24,10 @@ module.exports =(sequelize,Datatypes)=>{
         lastmodifiedpassword:{
             type:Datatypes.DATE
         }
-    });
+    },
+    {
+        paranoid: true,
+        underscored: true
+      });
     return CompanyDetail;
 }

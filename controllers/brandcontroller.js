@@ -1,5 +1,6 @@
 const db = require('../config/dbconfig');
 const Brand = db.brand;
+const FrameModel=db.framemodel;
 
 exports.addNew = async(req,res,next) =>{
    await Brand.findOrCreate({
@@ -25,7 +26,6 @@ exports.getAllBrand = async(req,res) =>{
     await Brand.findAndCountAll({
         where :{fk_companyid : req.userData.companyId}
     }).then(displayAllList=>{
-        // console.log(displayAllList);
        return res.status(200).send(displayAllList.rows);
     }).catch(err=>{
         return res.status(401).send("UnAuthorized Request");
@@ -33,13 +33,42 @@ exports.getAllBrand = async(req,res) =>{
 }
 
 exports.deleteBrand = async(req,res)=>{
-    const Id = req.params.framematerialId;
+    await Brand.destroy({
+        where: { uuid: req.params.uuid }
+      }).then(() => {
+        return  res.send({success:true});
+      }).catch(err=>{
+        return res.status(401).send("UnAuthorized Request");
+      });
+    // console.log(Id);
+    // return Brand
+    // .findById(Id)
+    // .then(brand => {
+    //   if (!brand) {
+    //     return res.status(400).send({
+    //       message: 'Brand Not Found',
+    //     });
+    //   }
+       
+    //     return FrameModel
+    //         .destroy({where:{brand_uuid:Id}})
+    //          .then(() =>{
+    //            return brand
+    //                 .destroy()
+    //                 .then((deleteed) => res.status(200).send(deleteed))
+    //                 .catch(error => res.status(400).send(error));
+    //          })
+    //          .catch(error => res.status(400).send(error));
+    //   })
+  
+    // .catch(error => res.status(400).send(error));
     //console.log("Producttype value:"+prodtype)
-  /*await ProductType.destroy({
-        where:{idname :prodtypeid}
-    }).then(()=>{
-        res.status(200).send("Deleted the Product Sucessfully"+prodtype);
-    })*/
+//   await Brand.destroy({
+//         where:{uuid :Id}
+//     }).then((brand)=>{
+//         console.log(brand);
+//        return res.sendStatus(200).send(brand);
+//     })
 }
 
 exports.updateBrand= async(req,res,next)=>{

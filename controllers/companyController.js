@@ -17,7 +17,7 @@ exports.registerCompany = async(req,res,next)=>{
             if(companychk.email==req.body.email){
                 return res.status(300).send(' Already Email  Registered');
             }
-            else if(companychk. companyname==req.body.companyName){
+            else if(companychk.companyname==req.body.companyName){
                 return res.status(300).send(' Already Company Name Registered');
             }
           
@@ -112,6 +112,7 @@ exports.Adminlogin = async(req,res,next)=>{
                     return res.status(300).send('Password is Incorrect');
                 }
                 else{
+                    // const Company_admin=`ADMIN-${Date.now()}-${admin.uuid}`;
                     const adminvalue="admin";
                     const token =jwt.sign({
                         username:admin.username,
@@ -119,7 +120,7 @@ exports.Adminlogin = async(req,res,next)=>{
                         companyname:admin.companyname,
                         companyId:admin.uuid,
                         Identifier:adminvalue,
-                        company:admin
+                        company:admin,
                      },
                      env.JWT_KEY,
                      {
@@ -128,7 +129,8 @@ exports.Adminlogin = async(req,res,next)=>{
                      );
                     
                      return res.status(200).json({
-                         token:token
+                         token:token,
+                         Identifier:adminvalue
                      });
                  }
                  return res.status(401).json({
@@ -143,8 +145,7 @@ exports.Adminlogin = async(req,res,next)=>{
     })
 }
 exports.Username= async(req,res,next)=>{
-    var data=req.userData;
-    return res.status(200).send(data);
+    return res.status(200).send(req.userData);
 // function verifyToken(req,res,next){
   //let token = req.query.token;
 
@@ -160,6 +161,17 @@ exports.Username= async(req,res,next)=>{
  
 //     return res.status(200).json(decodedToken);
 }
+exports.DeleteCompany= async(req,res,next)=>{
+   await CompanyUser.destroy({
+        where: { uuid: req.params.uuid}
+      }).then(() => {
+        return  res.send({success:true});
+      }).catch(err=>{
+        return res.status(401).send("UnAuthorized Request");
+      });
+   
+}
+
 exports.ForgetPassword= async(req,res,next)=>{
     await CompanyUser.findOne({
         where:{email :req.body.email}
@@ -318,11 +330,9 @@ exports.UpdateForgetPassword=async(req,res,next)=>{
 // }
 
 exports.getDetails = async(req,res,next)=>{
-    console.log(req.params.id);
     CompanyUser.findOne({
        where:{uuid :req.params.id}
     }).then(companydetail=>{
-        console.log(companydetail);
         if(companydetail != null){
             res.status(200).send(companydetail);
         }else{
@@ -351,7 +361,7 @@ exports.updateDetails = async(req,res,next)=>{
                 {
                     where:{uuid:req.params.companyId}
                 }).then((company)=>{
-                    res.status(200).send(company);
+                   return res.status(200).send(company);
                 }).catch(err=>{
                     console.log("Error in Company update ::"+err)
                 })
@@ -374,7 +384,7 @@ exports.updateDetails = async(req,res,next)=>{
                         {
                             where:{uuid:req.params.companyId}
                         }).then((company)=>{
-                            res.status(200).send(company);
+                           return res.status(200).send(company);
                         }).catch(err=>{
                             console.log("Error in Company update ::"+err)
                         })
@@ -385,7 +395,7 @@ exports.updateDetails = async(req,res,next)=>{
              
             }
     }else{
-        res.status(300).send("No record avaiable for :"+req.params.companyname)
+      return res.status(300).send("No record avaiable for :"+req.params.companyname)
     }
      })
 }

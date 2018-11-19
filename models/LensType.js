@@ -27,6 +27,11 @@ module.exports =(sequelize,Datatypes)=>{
         wholesalerPrice:{
             type:Datatypes.INTEGER,
         }
-    });
+    },
+    {
+        paranoid: true,
+        underscored: true
+      }
+    );
     return LensType;
 }

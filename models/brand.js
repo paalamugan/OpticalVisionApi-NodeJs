@@ -12,6 +12,9 @@ module.exports =(sequelize,Datatypes)=>{
         code:{
             type:Datatypes.STRING
         }
-    });
+    },{
+        paranoid: true,
+        underscored: true
+      });
     return Brand;
 }

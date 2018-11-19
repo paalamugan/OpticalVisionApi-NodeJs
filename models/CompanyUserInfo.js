@@ -38,6 +38,10 @@ module.exports =(sequelize,Datatypes)=>{
             type:Datatypes.STRING
         }
       
-    });
+    },{
+        paranoid: true,
+        underscored: true
+      }
+    );
     return CompanyInfo;
 }

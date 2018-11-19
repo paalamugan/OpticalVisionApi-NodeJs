@@ -3,12 +3,12 @@ const FrameModel = db.framemodel;
 const Brand = db.brand;
 exports.addNew = async(req,res,next) =>{
    await FrameModel.findOrCreate({
-            where :{brandUuid:req.body.brand.uuid,
+            where :{fk_brandid:req.body.brand.uuid,
                     model:req.body.model,
                     frametype:req.body.frametype,
                     fk_companyid:req.userData.companyId
             },
-            defaults: {brandUuid:req.body.brand.uuid,model:req.body.model,frametype:req.body.frametype,size:req.body.size,quantity:req.body.quantity,retailerPrice: req.body.retailerPrice,wholesalerPrice:req.body.wholesalerPrice,fk_companyid:req.userData.companyId}
+            defaults: {fk_brandid:req.body.brand.uuid,model:req.body.model,frametype:req.body.frametype,size:req.body.size,quantity:req.body.quantity,retailerPrice: req.body.retailerPrice,wholesalerPrice:req.body.wholesalerPrice,fk_companyid:req.userData.companyId}
         }).spread((material,created) =>{
             if(created){
                 res.status(200).send(material);
@@ -50,7 +50,7 @@ exports.deleteFrameModel = async(req,res)=>{
 exports.updateFrameModel = async(req,res,next)=>{
     const Id = req.params.uuid;
    await FrameModel.update({
-            brandUuid: req.body.brand.uuid,
+            fk_brandid: req.body.brand.uuid,
             model:  req.body.model,
             frametype:req.body.frametype,
             quantity:  req.body.quantity,
@@ -72,7 +72,7 @@ exports.updateFrameModel = async(req,res,next)=>{
 }
 exports.findFrameModel= async(req,res,next)=>{
      FrameModel.findOne({
-        where:{model:req.query.model,brandUuid:req.query.brand,fk_companyid:req.userData.companyId},
+        where:{model:req.query.model,fk_brandid:req.query.brand,fk_companyid:req.userData.companyId},
         include:[{
             model:Brand
         }]

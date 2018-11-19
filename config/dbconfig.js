@@ -47,22 +47,23 @@ db.brand                 = require('../models/brand')(sequelize,Sequelize);
 db.framemodel            = require('../models/FrameModel')(sequelize,Sequelize);
 db.lenstype            = require('../models/LensType')(sequelize,Sequelize);
 /* Association */
-db.signInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.employeeSingnInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.companyEmpInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.productlist.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.frametype.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.framematerial.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.boxmodel.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.customer.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.eyeprescriptions.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.salesorder.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.proditem.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.invoiceDetail.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.forgetpassword.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.brand.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.framemodel.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});
-db.lenstype.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid'});  
+db.signInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.employeeSingnInInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.companyEmpInfo.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.productlist.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.frametype.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.framematerial.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.boxmodel.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.customer.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.eyeprescriptions.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.salesorder.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.proditem.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.invoiceDetail.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.forgetpassword.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.brand.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.framemodel.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.lenstype.belongsTo(db.companyuserinfo,{foreignKey: 'fk_companyid', targetKey: 'uuid',onDelete: 'CASCADE'});
+db.framemodel.belongsTo(db.brand,{foreignKey: 'fk_brandid',targetKey: 'uuid',onDelete: 'CASCADE'});  
 // db.employeeSingnInInfo.belongsTo(db.companyEmpInfo,{foreignKey:"employeeId"});
 
 db.salesorder.hasMany(db.eyeprescriptions,{as:'SalesOrderID'});
@@ -74,7 +75,8 @@ db.proditem.belongsToMany(db.salesorder, { as: 'ProdItem', through: 'SalesOrderL
 db.proditem.belongsTo(db.productlist);
 db.proditem.belongsTo(db.frametype);
 db.proditem.belongsTo(db.framematerial);
-db.framemodel.belongsTo(db.brand);
+
+// db.brand.hasOne(db.framemodel,{foreignKey: 'fk_brandid',sourceKey: 'uuid'});
 /*Note:Need to find solution to store boxmodelid in proditem table */
 db.proditem.belongsTo(db.boxmodel);
 db.proditem.belongsTo(db.eyeprescriptions);

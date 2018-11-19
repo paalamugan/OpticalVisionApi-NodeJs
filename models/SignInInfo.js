@@ -8,6 +8,11 @@ module.exports =(sequelize,Datatypes)=>{
             type:Datatypes.STRING,
             allowNull:false
         }
-    });
+    },
+    {
+        paranoid: true,
+        underscored: true
+      }
+    );
     return SignInInfo;
 }

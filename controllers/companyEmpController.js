@@ -23,7 +23,6 @@ exports.addNewEmployee = async(req,res,next)=>{
     //     empIdCnt = totEmpCount.count+1
     // });
     // console.log("Employee Count valu::"+empIdCnt);
-    var data=req.userData;
     await EmpInfo.findOne({
         where :{
             employeeEmail : req.body.employeeEmail,
@@ -31,16 +30,16 @@ exports.addNewEmployee = async(req,res,next)=>{
         }     
     }).then(registeremp=>{
         if(registeremp!=null){
-        if(registeremp.employeeName == req.body.employeeName){
-            res.status(300).send("Already This Employee name registered");
-        }else if(registeremp.employeeEmail == req.body.employeeEmail){
-            res.status(300).send("Already This Employee Email registered")
+        if(registeremp.employeeName===req.body.employeeName){
+           return res.status(300).send({error:"Already This Employee name registered",data:req.body});
+        }else if(registeremp.employeeEmail===req.body.employeeEmail){
+           return res.status(300).send({error:"Already This Employee Email registered",data:req.body})
         }
     }
         else{
             bcrypt.hash(req.body.employeePassword,10,(err,hash)=>{
                 if(err){
-                    return res.status(300).send('Invalid data');
+                    return res.status(300).send({error:'Invalid data',data:req.body});
                 }else{
                     if(req.file===undefined || req.file===null){
                         var Imagepath='/uploads/noavatar.png';
@@ -68,7 +67,7 @@ exports.addNewEmployee = async(req,res,next)=>{
                   fk_companyid:req.body.uuid,
                    userImage: req.body.userImage
               }).then(empregistered=>{
-                res.status(200).send(empregistered);
+               return res.status(200).send(empregistered);
                 //   EmpSignInInfo.create({
                 //       email : empregistered.employeeEmail,
                 //       password : empregistered.employeePassword,
@@ -97,13 +96,14 @@ exports.Employeelogin = async(req,res,next)=>{
           if(!employeedetail){
             return res.status(300).send('Email is not Registerd');
           }else{
-              if(employeedetail.adminAccess=='yes'){
+              if(employeedetail.adminAccess==='yes'){
                 bcrypt.compare(req.body.password,employeedetail.employeePassword,(err,result)=>{
 
                     if(!result){
                         return res.status(300).send('Password is Incorrect');
                     }
                     if(result){
+                        // const Company_employee=`EMPLOYEE-${Date.now()}-${employeedetail.uuid}`;
                         const employeevalue="employee-admin";
                         const token =jwt.sign({
                             username:employeedetail.employeeName,
@@ -112,7 +112,7 @@ exports.Employeelogin = async(req,res,next)=>{
                             companyId:employeedetail.companyuserinfo.uuid,
                             Identifier:employeevalue,
                             employee:employeedetail,
-                            company:employeedetail.companyuserinfo
+                            company:employeedetail.companyuserinfo,
                          },
                          env.JWT_KEY,
                          {
@@ -168,26 +168,21 @@ exports.Employeelogin = async(req,res,next)=>{
       })
   }
 exports.getEmpDetails = async(req,res,next)=>{
-    var data=req.userData;
     EmpInfo.findOne({
         where :{
            uuid:req.params.id,
-           fk_companyid :data.companyId
+           fk_companyid :req.userData.companyId
         }
     }).then(empinfo=>{
-        console.log(JSON.stringify(empinfo))
-        res.send(empinfo);
+       return res.send(empinfo);
     }).catch(err=>{
         return res.status(401).send("UnAuthorized Request");
       })
 }
 exports.updateEmpDetails = async(req,res,next)=>{
-    console.log(req.body);
-    await EmpInfo.findById(req.params.id).then((data)=>{
-       let empdetails=JSON.stringify(data);
-       console.log(empdetails);
-       if(empdetails.employeePassword===req.body.employeePassword){
-         EmpInfo.update({            
+    await EmpInfo.findOne({where:{uuid:req.params.id}}).then((data)=>{
+        if(data.dataValues.employeePassword===req.body.employeePassword){
+            EmpInfo.update({            
                         employeeName : req.body.employeeName,
                          mobileNumber:req.body.mobileNumber,
                         employeeEmail : req.body.employeeEmail,
@@ -200,7 +195,7 @@ exports.updateEmpDetails = async(req,res,next)=>{
                     },{
                         where :{[Op.and]:[{employeeId:req.body.employeeId},{fk_companyid:req.body.fk_companyid}]}
                     }).then((emp)=>{
-                      res.status(200).send(emp);
+                     return res.status(200).send(emp);
                            
                     }).catch(err=>{
                         return res.status(401).send("UnAuthorized Request");
@@ -224,7 +219,7 @@ exports.updateEmpDetails = async(req,res,next)=>{
                 },{
                     where :{[Op.and]:[{employeeId:req.body.employeeId},{fk_companyid:req.body.fk_companyid}]}
                 }).then((emp)=>{
-                    res.status(200).send(emp);
+                   return res.status(200).send(emp);
                        
                 }).catch(err=>{
                     return res.status(401).send("UnAuthorized Request");
@@ -257,17 +252,16 @@ exports.updateEmpDetails = async(req,res,next)=>{
      }
 
     exports.getAllEmpDetails = async(req,res)=>{
-        console.log( req.userData);
-        var data=req.userData;
-        EmpInfo.findAndCountAll({
-             where:{ fk_companyid :data.companyId},
+      await EmpInfo.findAndCountAll({
+             where:{ fk_companyid :req.userData.companyId},
              include:[{
                  model:Company
              }]
          }).then(result=>{
-             res.status(200).send(result.rows);
+            return res.status(200).send(result.rows);
          })
         }
+
     exports.emailEmpDetails=async(req,res)=>{
         const output=`
         <h1>Hi ${req.body.username},</h1>
@@ -302,35 +296,6 @@ exports.updateEmpDetails = async(req,res,next)=>{
              
          });
     }
-       //  exports.getAllEmpDetails = async(req,res)=>{
-            // var transporter =  nodemailer.createTransport({
-            //     service: 'gmail',
-            //     auth: {
-            //       user: 'paalamugan@gmail.com',
-            //       pass: 'paalamugan@'
-            //     }
-            //   });
-            //   var mailOptions = {
-            //     from: 'paalamugan@gmail.com',
-            //     to: 'paalamugan44@gmail.com',
-            //     subject: 'Sending Email using Node.js',
-            //     text: 'That was easy!'
-            //   };
-            //   transporter.sendMail(mailOptions, function(error, info){
-            //     if (error) {
-            //       console.log(error);
-            //     } else {
-            //       console.log('Email sent: ' + info.response);
-            //     }
-            //   });
-            // EmpInfo.find({
-            //     include: [{
-            //         model: Company
-            //     }]
-            //     // where:{companyuserinfoId :req.params.companyId}
-            //  }).then(result=>{
-            //    res.send(result);
-            //  })
-   // }
+       
 
 
