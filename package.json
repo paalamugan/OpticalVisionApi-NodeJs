@@ -1,7 +1,7 @@
 {
   "name": "visionopticals",
   "version": "1.0.0",
-  "description": "Applicatio for opticals business",
+  "description": "Application for opticals business",
   "main": "app.js",
   "scripts": {
     "start": "nodemon ./bin/www",
