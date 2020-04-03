@@ -24,7 +24,7 @@
     "nodemailer": "^4.6.8",
     "nodemon": "^1.18.4",
     "request": "^2.88.0",
-    "sequelize": "^4.38.0"
+    "sequelize": "^5.15.1"
   },
   "engines": {
     "node": "8.11.1",
