@@ -1,7 +1,7 @@
 {
-  "name": "visionopticals",
-  "version": "1.0.0",
-  "description": "Application for opticals business",
+  "name": "Optical Vision Api",
+  "version": "0.0.0",
+  "description": "API server for opticals business",
   "main": "app.js",
   "scripts": {
     "start": "nodemon ./bin/www",
