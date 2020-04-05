@@ -14,11 +14,11 @@ const {db}  = require('./db');
 //middleware
 
 app.use(logger('dev'));
-app.use(express.static('./'));
-app.use(bodyPraser.urlencoded({extended:false}));
+
+app.use(bodyPraser.urlencoded({ extended:true }));
 app.use(bodyPraser.json());
-//app.use(express.static(path.join(__dirname, 'dist/OpticalVision')));
-//app.use('/', express.static(path.join(__dirname, 'dist/OpticalVision')));
+app.use(express.static(path.join(__dirname, 'dist/OpticalVision')));
+app.use('/', express.static(path.join(__dirname, 'dist/OpticalVision')));
 app.use(cors({ origin: 'http://localhost:4200' }));
 app.use(function(req,res,next){
 

@@ -2,3 +2,5 @@
 database_structure.txt
 
 package-lock.json
+
+dist/*
