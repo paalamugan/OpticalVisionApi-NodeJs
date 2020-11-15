@@ -1,0 +1,27 @@
+Install mysql in linux
+
+https://medium.com/@alef.duarte/cant-connect-to-local-mysql-server-through-socket-var-run-mysqld-mysqld-sock-155d580f3a06
+
+Errors:
+
+1. Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+
+Solution:
+    Must check whether mysql server runnig or not.(Becoz this error shows only mysql server doesn't running).
+    sudo service mysql start
+
+2. su: warning: cannot change directory to /nonexistent: No such file or directory
+
+    Solution:
+        sudo service mysql stop
+        sudo usermod -d /var/lib/mysql/ mysql
+        sudo service mysql start
+
+3. Client does not support authentication protocol requested by server; consider upgrading MySQL client
+
+Solution: 
+    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+    flush privileges;
+
+
+    If that doesn't work, try it without @'localhost' part.

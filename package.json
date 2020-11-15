@@ -1,6 +1,6 @@
 {
-  "name": "OpticalVisionApi",
-  "version": "0.0.0",
+  "name": "optical-vision-api",
+  "version": "1.0.0",
   "description": "API server for opticals business",
   "main": "app.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "Paalamugan",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.0",
+    "bcrypt": "^3.0.8",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
@@ -20,14 +20,14 @@
     "lodash": "^4.17.10",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
-    "mysql2": "^1.6.1",
+    "mysql2": "^1.7.0",
     "nodemailer": "^4.6.8",
     "nodemon": "^1.18.4",
     "request": "^2.88.0",
-    "sequelize": "^4.38.0"
+    "sequelize": "^6.3.5"
   },
   "engines": {
-    "node": "8.11.1",
-    "npm": "6.4.1"
+    "node": "v8.11.1",
+    "npm": "5.6.0"
   }
 }

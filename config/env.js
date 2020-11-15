@@ -1,7 +1,7 @@
 const env={
-    database:'opticalservice',
+    database:'opticalvision',
     username:'root',
-    password:null,
+    password: 'root',
     host:'localhost',
     dialect:'mysql',
     pool:{

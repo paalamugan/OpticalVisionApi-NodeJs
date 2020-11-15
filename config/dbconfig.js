@@ -2,12 +2,12 @@ const env = require('./env');
 const db ={};
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(env.database,env.username,env.password,{
-    host:env.host ,
+    host:env.host,
     dialect:env.dialect,
-    operatorAliases:false,
+    // operatorAliases: Sequelize.Op,
     define:{
-        timestamps: false
-      },
+        timestamps: true
+    },
     pool:{
         max:env.pool.max,
         min:env.pool.min,

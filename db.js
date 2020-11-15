@@ -8,7 +8,6 @@ const invoiceOrder = db.invoiceorder;
 const Sequelize = require('sequelize');
 const Op=Sequelize.Op;
 db.sequelize.sync({force:false}).then(()=>{
-    
 //    Brand.findAndCountAll({}).then(result=>{
 //         console.log("result value:"+result.count);
 //         if(result.count == 0){

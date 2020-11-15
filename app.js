@@ -1,56 +1,60 @@
-const express = require('express')
-const logger = require('morgan');
-const bodyPraser = require('body-parser');
-const cors = require('cors');
-var path = require('path');
-var session=require('express-session');
+const express = require("express");
+const logger = require("morgan");
+const bodyPraser = require("body-parser");
+const cors = require("cors");
+var path = require("path");
+var session = require("express-session");
 const app = express();
 
 //const replaceall = require('replaceall');
-const {db}  = require('./db');
+const { db } = require("./db");
 
 //routes
 //const customer = req
 //middleware
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 
-app.use(bodyPraser.urlencoded({ extended:true }));
+app.use(bodyPraser.urlencoded({ extended: true }));
 app.use(bodyPraser.json());
-app.use(express.static(path.join(__dirname, 'dist/OpticalVision')));
-app.use('/', express.static(path.join(__dirname, 'dist/OpticalVision')));
-app.use(cors({ origin: 'http://localhost:4200' }));
-app.use(function(req,res,next){
-
-  res.header('Access-Control-Allow-Origin',"http://localhost:4200");
-  res.header('Access-Control-Allow-Headers','Origin,X-Requested-With,Content-Type, Accept, Authorization');
+app.use(express.static(path.join(__dirname, "dist/OpticalVision")));
+app.use("/", express.static(path.join(__dirname, "dist/OpticalVision")));
+app.use(cors({ origin: "http://localhost:4200" }));
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin,X-Requested-With,Content-Type, Accept, Authorization"
+  );
   // if(req.method === 'OPTIONS'){
   // res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
   // return res.status(200).json({});
   // }
   next();
-  });
- app.use(session({
-   secret:"Shh, its a secret!",
-   resave:false,
-   saveUninitialized:true
- }))
+});
+app.use(
+  session({
+    secret: "Shh, its a secret!",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 //routes
 
 const companyinfo = require("./routes/companyinforoute");
 const employeeinfo = require("./routes/companyemproute");
 const productList = require("./routes/productlistroute");
-const frameType   = require("./routes/frametyperoute");
-const frameMaterial =  require("./routes/framematerialroute");
-const salesOrder     = require("./routes/salesorderroute");
-const customer   = require("./routes/customerroute"); 
-const brand   = require("./routes/brandroute"); 
-const framemodel   = require("./routes/framemodelroute"); 
-const Lenstype   = require("./routes/lenstyperoute"); 
-const boxes = require('./routes/boxmodelroute');
+const frameType = require("./routes/frametyperoute");
+const frameMaterial = require("./routes/framematerialroute");
+const salesOrder = require("./routes/salesorderroute");
+const customer = require("./routes/customerroute");
+const brand = require("./routes/brandroute");
+const framemodel = require("./routes/framemodelroute");
+const Lenstype = require("./routes/lenstyperoute");
+const boxes = require("./routes/boxmodelroute");
 //Signup
 // app.use("/api/visionapp/company/register",companyinfo);
-app.use("/api/visionapp/company",companyinfo);
+app.use("/api/visionapp/company", companyinfo);
 // app.use("/api/visionapp/company/update",companyinfo);
 //Login/
 // app.use("/api/visionapp/company",companyinfo);
@@ -58,85 +62,78 @@ app.use("/api/visionapp/company",companyinfo);
 // app.use("/api/visionapp/company",companyinfo);
 
 //Employee
-app.use("/api/visionapp/employee",employeeinfo);
+app.use("/api/visionapp/employee", employeeinfo);
 // app.use("/api/visionapp/employee/get",employeeinfo);
 // app.use("/api/visionapp/employee/update",employeeinfo);
 // app.use("/api/visionapp/employee/delete",employeeinfo);
 // app.use("/api/visionapp/employee/getone",employeeinfo);
 
 //Brand
-app.use("/api/visionapp/brand/add",brand);
-app.use("/api/visionapp/brand/update",brand);
-app.use("/api/visionapp/brand/delete",brand);
-app.use("/api/visionapp/brand/get",brand);
+app.use("/api/visionapp/brand/add", brand);
+app.use("/api/visionapp/brand/update", brand);
+app.use("/api/visionapp/brand/delete", brand);
+app.use("/api/visionapp/brand/get", brand);
 
 //FrameModel
-app.use("/api/visionapp/framemodel/find",framemodel);
-app.use("/api/visionapp/framemodel/add",framemodel);
-app.use("/api/visionapp/framemodel/update",framemodel);
-app.use("/api/visionapp/framemodel/delete",framemodel);
-app.use("/api/visionapp/framemodel/get",framemodel);
-
+app.use("/api/visionapp/framemodel/find", framemodel);
+app.use("/api/visionapp/framemodel/add", framemodel);
+app.use("/api/visionapp/framemodel/update", framemodel);
+app.use("/api/visionapp/framemodel/delete", framemodel);
+app.use("/api/visionapp/framemodel/get", framemodel);
 
 //LensType
-app.use("/api/visionapp/lenstype/find",Lenstype);
-app.use("/api/visionapp/lenstype/add",Lenstype);
-app.use("/api/visionapp/lenstype/update",Lenstype);
-app.use("/api/visionapp/lenstype/delete",Lenstype);
-app.use("/api/visionapp/lenstype/get",Lenstype);
+app.use("/api/visionapp/lenstype/find", Lenstype);
+app.use("/api/visionapp/lenstype/add", Lenstype);
+app.use("/api/visionapp/lenstype/update", Lenstype);
+app.use("/api/visionapp/lenstype/delete", Lenstype);
+app.use("/api/visionapp/lenstype/get", Lenstype);
 
 //Boxes
-app.use("/api/visionapp/boxes/add",boxes);
-app.use("/api/visionapp/boxes/update",boxes);
-app.use("/api/visionapp/boxes/delete",boxes);
-app.use("/api/visionapp/boxes/get",boxes);
-app.use("/api/visionapp/boxes/getone",boxes);
+app.use("/api/visionapp/boxes/add", boxes);
+app.use("/api/visionapp/boxes/update", boxes);
+app.use("/api/visionapp/boxes/delete", boxes);
+app.use("/api/visionapp/boxes/get", boxes);
+app.use("/api/visionapp/boxes/getone", boxes);
 //Customer:
-app.use("/api/visionapp/customer",customer);
-app.use("/api/visionapp/customer/find",customer)
+app.use("/api/visionapp/customer", customer);
+app.use("/api/visionapp/customer/find", customer);
 //ProductList
 
-app.use("/api/visionapp/productlist/new",productList);
-app.use("/api/visionapp/productlist/update",productList);
-app.use("/api/visionapp/productlist/delete",productList);
-app.use("/api/visionapp/productlist/listall",productList);
+app.use("/api/visionapp/productlist/new", productList);
+app.use("/api/visionapp/productlist/update", productList);
+app.use("/api/visionapp/productlist/delete", productList);
+app.use("/api/visionapp/productlist/listall", productList);
 
 //FrameType
 
-app.use("/api/visionapp/frametype/add",frameType);
-app.use("/api/visionapp/frametype/update",frameType);
-app.use("/api/visionapp/frametype/delete",frameType);
-app.use("/api/visionapp/frametype/get",frameType);
+app.use("/api/visionapp/frametype/add", frameType);
+app.use("/api/visionapp/frametype/update", frameType);
+app.use("/api/visionapp/frametype/delete", frameType);
+app.use("/api/visionapp/frametype/get", frameType);
 
 //FrameMaterial
 
-app.use("/api/visionapp/framematerial/add",frameMaterial);
-app.use("/api/visionapp/framematerial/update",frameMaterial);
-app.use("/api/visionapp/framematerial/delete",frameMaterial);
-app.use("/api/visionapp/framematerial/get",frameMaterial);
+app.use("/api/visionapp/framematerial/add", frameMaterial);
+app.use("/api/visionapp/framematerial/update", frameMaterial);
+app.use("/api/visionapp/framematerial/delete", frameMaterial);
+app.use("/api/visionapp/framematerial/get", frameMaterial);
 
 //Sales Order:
-app.use("/api/visionapp/salesorder/new",salesOrder);
-app.use("/api/visionapp/salesorder/findall",salesOrder);
+app.use("/api/visionapp/salesorder/new", salesOrder);
+app.use("/api/visionapp/salesorder/findall", salesOrder);
 //app.use("/api/visionapp/salesorder/findallbyyear",salesOrder);
 //app.use("/api/visionapp/salesorder/findallbymonth",salesOrder);
 
 //DUmmy Value
-app.post('/api/visionapp/dummy/',(req,res,next)=>{
-return res.send(req.body);
-  
-})
+app.post("/api/visionapp/dummy/", (req, res, next) => {
+  return res.send(req.body);
+});
 /*const customerRoute       = require("./routes/customerroute");
 const eyePrecriptionRoute = require("./routes/eyeprecriptionroute");
 const invoiceOrderRoute   = require("./routes/invoiceorderroute");
 //const productType         = require("./routes/producttyperoute");
 const productItem         = require("./routes/productitemroute");
 const salesProductOrder   = require("./routes/salesproductroute");*/
-
-
-
-
-
 
 //need to remove belkow
 /*app.use("/api/customer/add",customerRoute);
@@ -179,27 +176,22 @@ app.use('/api/get/eyepowers', eyepowerroute);
 
 //middleware
 
-       
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-        next(createError(404));
-      });
-      app.use('*',(res,req,next)=>{
-        res.send('this is my default router');
-      })
-      // error handler
-      app.use(function(err, req, res, next) {
-        // set locals, only providing error in development
-        res.locals.message = err.message;
-        res.locals.error = req.app.get('env') === 'development' ? err : {};
-      
-        // render the error page
-        res.status(err.status || 500);
-        res.send(err.status);
-      
-      
-      });
-      
-      module.exports = app;
+app.use(function (req, res, next) {
+  next(createError(404));
+});
+app.use("*", (res, req, next) => {
+  res.send("this is my default router");
+});
+// error handler
+app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
+  // render the error page
+  res.status(err.status || 500);
+  res.send(err.status);
+});
 
+module.exports = app;
