@@ -238,8 +238,8 @@ exports.ForgetPassword = async (req, res, next) => {
                 //  port:110,
                 service: "gmail",
                 auth: {
-                  user: "paalamugan44@gmail.com",
-                  pass: "paalamugan44@",
+                  user: "paalamugan26@gmail.com",
+                  pass: "paalamuganmail26@",
                 },
                 tls: {
                   rejectUnauthorized: false,
