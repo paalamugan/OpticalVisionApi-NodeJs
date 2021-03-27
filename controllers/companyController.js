@@ -9,114 +9,93 @@ const bcrypt = require("bcrypt");
 const env = require("../config/env.js");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-exports.registerCompany = async (req, res, next) => {
-    console.log("req come hete");
-  await CompanyUser.findOne({
-    where: {
-      [Op.or]: [
-        { email: req.body.email },
-        { companyname: req.body.companyName },
-      ],
-    },
-  }).then((companychk) => {
-      console.log("kughjhasjhgjas", companychk);
-    if (companychk != null) {
-      if (companychk.email == req.body.email) {
-        return res.status(300).send(" Already Email  Registered");
-      } else if (companychk.companyname == req.body.companyName) {
-        return res.status(300).send(" Already Company Name Registered");
-      }
-    } else {
-        console.log("bucyahkjjk sesseio", req.body.password)
-        console.log("bcrypt", bcrypt)
-      bcrypt.hash(req.body.password, 10, (err, hash) => {
-        console.log("bucyahkjjk aasasassesseio")
-        if (err) {
-          return res.status(401).send("Invalid data");
-        } else {
-            console.log("bucyahkjjk else aasasassesseio")
-          if (req.file === undefined || req.file === null) {
-            var Imagepath = "/uploads/noavatar.png";
-            req.body.userImage = Imagepath;
-          }
-          console.log("CompanyUser else count")
-          CompanyUser.count().then((count) => {
-            count = count + 1;
-            CompanyUser.create({
-              customid: count,
-              companyname: req.body.companyName,
-              username: req.body.userName,
-              phonenumber: req.body.phoneNumber,
-              email: req.body.email,
-              address: req.body.address,
-              tin: req.body.tinNumber,
-              password: hash,
-              userImage: req.body.userImage,
-            }).then((registeredcompany) => {
-                console.log("CompanyUser cretae")
-              SignInInfo.create({
-                fk_companyid: registeredcompany.uuid,
-                username: registeredcompany.email,
-                password: registeredcompany.password,
-              }).then((signinfo) => {
-                const output = `
-                            <h1>Hi ${registeredcompany.username},</h1>
-                            <p>Thank you for Registered My Optic Vision Application</p>
-                            `;
-                var transporter = nodemailer.createTransport({
-                  // host:'mail.opticvision.com',
-                  //  port:110,
-                  service: "gmail",
-                  auth: {
-                    user: "paalamugan44@gmail.com",
-                    pass: "paalamugan44@",
-                  },
-                  tls: {
-                    rejectUnauthorized: false,
-                  },
-                });
-                const mailOptions = {
-                  from: '"Optic Vision" <paalamugan44@gmail.com>', // sender address
-                  to: `${registeredcompany.email}`, // list of receivers
-                  subject: "Optic Vision Application", // Subject line
-                  text: "Optic Vision", // plain text body
-                  html: output, //html body
-                };
-                transporter.sendMail(mailOptions, function (err, info) {
-                  if (err) {
-                    return console.log(err);
-                  }
 
-                  console.log("Message sent:%s", info.messageId);
-                  return res.status(200).send(signinfo);
-                });
-              });
-            });
-          });
+const saltRounds = 10;
+
+exports.registerCompany = async (req, res, next) => {
+
+    req.body.avatar = '/' + (req.file && req.file.path || 'images/avatar.png');
+
+    try {
+
+        let company = await CompanyUser.findOne({
+            where: {
+                [Op.or]: [
+                    { email: req.body.email }
+                ],
+            },
+        });
+
+        if (company && company.email === req.body.email) {
+            throw new Error("Already email registered!");
         }
-      });
+
+        req.body.password =  await bcrypt.hash(req.body.password, saltRounds);
+
+        let user = await CompanyUser.create(req.body);
+
+        let signInfo = await SignInInfo.create({ 
+            fk_companyid: user.uuid, 
+            username: user.email,
+            password: user.password
+        });
+
+        return res.json(signInfo);
+        
+        const output = `<h1>Hi ${user.userName},</h1> <p style="font-size: 16px;">Thank you for registered in Optic Vision Application.</p>`;
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "paalamugan26@gmail.com",
+                pass: "lrenkrodvraufrfn",
+            },
+            tls: {
+                rejectUnauthorized: false,
+            },
+        });
+
+        const mailOptions = {
+            from: '"Optic Vision" <paalamugan44@gmail.com>', // sender address
+            to: user.email, // list of receivers
+            subject: "Optic Vision Application", // Subject line
+            text: "Optic Vision", // plain text body
+            html: output, //html body
+        };
+
+        transporter.sendMail(mailOptions, function (err, info) {
+
+            if (err) {
+                throw err;
+            }
+
+            console.log("Message sent:%s", info.messageId);
+            return res.json(signInfo);
+        });
+
+    } catch (err) {
+        next(err);
     }
-  });
+
 };
+
 exports.Adminlogin = async (req, res, next) => {
   await CompanyUser.findOne({
     where: { email: req.body.email },
   })
     .then((admin) => {
       if (!admin) {
-        return res.status(300).send("Email is not Registerd");
+        return next(new Error("Email is not Registerd"));
       } else {
         bcrypt.compare(req.body.password, admin.password, (err, result) => {
           if (!result) {
-            return res.status(300).send("Password is Incorrect");
+            return next(new Error("Password is Incorrect"));
           } else {
             // const Company_admin=`ADMIN-${Date.now()}-${admin.uuid}`;
             const adminvalue = "admin";
             const token = jwt.sign(
               {
-                username: admin.username,
-                userImage: admin.userImage,
-                companyname: admin.companyname,
+                userName: admin.userName,
+                companyName: admin.companyName,
                 companyId: admin.uuid,
                 Identifier: adminvalue,
                 company: admin,
@@ -139,7 +118,7 @@ exports.Adminlogin = async (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
 };
 exports.Username = async (req, res, next) => {

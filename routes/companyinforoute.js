@@ -6,22 +6,28 @@ const db = require('../config/dbconfig');
 const CheckAuth=require('../middleware/check-auth');
 const ValidatePayload=require('../middleware/validatepayload');
 const UploadImageAdmin=require('../middleware/upload-image-Admin');
-// const multer = require('multer');
-// const upload = multer({dest:'uploads/'});
+
 router.route("/register")
-.post((UploadImageAdmin),CompanyController.registerCompany)
+.post(UploadImageAdmin, CompanyController.registerCompany)
+
 router.route("/adminlogin")
 .post((ValidatePayload),CompanyController.Adminlogin)
+
 router.route("/username")
 .get((CheckAuth),CompanyController.Username)
+
 router.route("/delete/:uuid")
 .delete((CheckAuth),CompanyController.DeleteCompany)
+
 router.route("/getone/:id")
 .get(CompanyController.getDetails)
+
 router.route("/update/:companyId")
 .put((UploadImageAdmin),CompanyController.updateDetails)
+
 router.route("/forgetpassword")
 .post((ValidatePayload),CompanyController.ForgetPassword)
+
 router.route("/forgetpassword/:id")
 .get(CompanyController.GetForgetPassword)
 .put(CompanyController.UpdateForgetPassword)

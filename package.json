@@ -18,8 +18,9 @@
     "express-session": "^1.15.6",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10",
+    "moment": "^2.29.1",
     "morgan": "^1.9.1",
-    "multer": "^1.4.1",
+    "multer": "^1.4.2",
     "mysql2": "^1.7.0",
     "nodemailer": "^4.6.8",
     "nodemon": "^1.18.4",
@@ -29,5 +30,12 @@
   "engines": {
     "node": "v8.11.1",
     "npm": "5.6.0"
+  },
+  "nodemonConfig": {
+    "legacyWatch": true,
+    "delay": "1500",
+    "watch": [
+      "."
+    ]
   }
 }

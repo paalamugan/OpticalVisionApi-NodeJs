@@ -1,9 +1,8 @@
 const express = require("express");
 const logger = require("morgan");
-const bodyPraser = require("body-parser");
-const cors = require("cors");
-var path = require("path");
-var session = require("express-session");
+const createError = require('http-errors');
+const path = require("path");
+const session = require("express-session");
 const app = express();
 
 //const replaceall = require('replaceall');
@@ -15,23 +14,11 @@ const { db } = require("./db");
 
 app.use(logger("dev"));
 
-app.use(bodyPraser.urlencoded({ extended: true }));
-app.use(bodyPraser.json());
-app.use(express.static(path.join(__dirname, "dist/OpticalVision")));
-app.use("/", express.static(path.join(__dirname, "dist/OpticalVision")));
-app.use(cors({ origin: "http://localhost:4200" }));
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin,X-Requested-With,Content-Type, Accept, Authorization"
-  );
-  // if(req.method === 'OPTIONS'){
-  // res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
-  // return res.status(200).json({});
-  // }
-  next();
-});
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "build")));
+app.use("/", express.static(path.join(__dirname, "build")));
+
 app.use(
   session({
     secret: "Shh, its a secret!",
@@ -52,6 +39,7 @@ const brand = require("./routes/brandroute");
 const framemodel = require("./routes/framemodelroute");
 const Lenstype = require("./routes/lenstyperoute");
 const boxes = require("./routes/boxmodelroute");
+
 //Signup
 // app.use("/api/visionapp/company/register",companyinfo);
 app.use("/api/visionapp/company", companyinfo);
@@ -174,24 +162,26 @@ app.use('/api/eyepower/register', eyepowerroute);
 app.use('/api/get/eyepowers', eyepowerroute);
 */
 
-//middleware
+// Health check
+
+app.get('/api/health', function (req, res, next) {
+    res.send('OK');
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
-app.use("*", (res, req, next) => {
-  res.send("this is my default router");
-});
+
+
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
-
   // render the error page
   res.status(err.status || 500);
-  res.send(err.status);
+  res.json({ error: err.message });
 });
 
 module.exports = app;

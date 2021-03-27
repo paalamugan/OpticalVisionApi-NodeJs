@@ -1,13 +1,15 @@
+const Sequelize = require('sequelize');
 const db = require('./config/dbconfig');
+
+const Op = Sequelize.Op;
 
 const Customer = db.customerdetails;
 const CompanyUser = db.companyuserinfo;
 const EyePower = db.eyedetails;
 const Brand = db.brand;
 const invoiceOrder = db.invoiceorder;
-const Sequelize = require('sequelize');
-const Op=Sequelize.Op;
-db.sequelize.sync({force:false}).then(()=>{
+
+db.sequelize.sync({ force: false }).then(()=>{
 //    Brand.findAndCountAll({}).then(result=>{
 //         console.log("result value:"+result.count);
 //         if(result.count == 0){
