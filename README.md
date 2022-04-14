@@ -2,7 +2,7 @@
 
 Run Mysql server via docker
 
- docker run -d --name mysql -p 3306:3306 -e MYSQL_USER=paalan -e MYSQL_PASSWORD=paalan -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=opticalvision -v /mnt/e/development/git/OpticalVisionApi-NodeJs/data/db/mysql:/data/db mysql:latest
+ docker run -d --name mysql -p 3306:3306 -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=opticalvision -v /mnt/e/development/git/OpticalVisionApi-NodeJs/data/db/mysql:/data/db mysql:latest
 
 Optical Application using NodeJs Rest Api
 
